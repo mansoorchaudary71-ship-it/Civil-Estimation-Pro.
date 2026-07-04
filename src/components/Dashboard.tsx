@@ -1217,7 +1217,7 @@ export default function Dashboard({
  <div className="w-full md:max-w-[1400px] md:mx-auto z-10 flex flex-col items-start gap-1 px-4 md:px-0">
  <h1 className="leading-tight text-3xl md:text-4xl lg:text-5xl font-bold text-slate-800 tracking-tight">Civil Estimation</h1>
  <h1 className="leading-tight text-3xl md:text-4xl lg:text-5xl font-bold text-blue-600 tracking-tight mb-2">Pro.</h1>
- <p className="md: max-w-lg mb-2 text-base font-normal text-slate-600 leading-relaxed">Welcome back, {user.displayName?.split(' ')[0] || 'Engineer'}.</p>
+ <p className="md: max-w-lg mb-2 text-base font-normal text-slate-600 leading-relaxed">Welcome back, {user?.displayName?.split(' ')[0] || 'Engineer'}.</p>
  </div>
  </div>
 
