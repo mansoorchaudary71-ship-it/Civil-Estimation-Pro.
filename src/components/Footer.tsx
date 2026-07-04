@@ -138,7 +138,7 @@ export default function Footer({ activeModule, onNavigate }: { activeModule?: Mo
           </div>
 
           {/* Newsletter Embedded Section */}
-          <div className="flex flex-col gap-4 w-full lg:w-auto lg:min-w-[400px]">
+          <div className="flex flex-col gap-4 w-full lg:max-w-md">
             <h3 className="flex items-center gap-2 text-base font-bold text-slate-900">
               <MailPlus className="w-5 h-5 text-blue-600" /> Stay Updated
             </h3>

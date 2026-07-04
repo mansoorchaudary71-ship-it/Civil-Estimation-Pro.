@@ -16,8 +16,8 @@ export default function AIEstimatorBanner({ onOpenChat }: AIEstimatorBannerProps
       {/* Mesh gradient overlay */}
       <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCI+CjxjaXJjbGUgY3g9IjIiIGN5PSIyIiByPSIxIiBmaWxsPSJyZ2JhKDU5LCAxMzAsIDI0NiwgMC4wMykiLz4KPC9zdmc+')] opacity-100 mix-blend-multiply pointer-events-none"></div>
 
-      <div className="relative z-10 p-8 sm:p-10 lg:p-12 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-10 h-full">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 sm:gap-8 w-full lg:w-auto">
+      <div className="relative z-10 p-8 sm:p-10 lg:p-12 flex flex-col md:flex-row items-start md:items-center justify-between gap-10 h-full">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 sm:gap-8 w-full md:w-auto">
           <div className="relative shrink-0 hidden sm:block">
             <div className="absolute inset-0 bg-blue-600/20 blur-xl rounded-full group-hover:bg-blue-600/30 group-hover:scale-110 transition-all duration-700"></div>
             <div className="w-16 h-16 sm:w-20 sm:h-20 relative rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center shadow-lg transition-transform duration-700 group-hover:scale-105 group-hover:rotate-3">
@@ -57,11 +57,11 @@ export default function AIEstimatorBanner({ onOpenChat }: AIEstimatorBannerProps
           </div>
         </div>
 
-        <div className="flex flex-col items-start lg:items-center justify-center shrink-0 w-full lg:w-auto mt-4 lg:mt-0 pt-8 lg:pt-0 border-t border-slate-200/60 lg:border-t-0 lg:border-l lg:pl-10 relative">
+        <div className="flex flex-col items-start md:items-center justify-center shrink-0 w-full md:w-auto mt-4 md:mt-0 pt-8 md:pt-0 border-t border-slate-200/60 md:border-t-0 md:border-l md:pl-10 relative">
           
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-blue-500/10 blur-2xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-1000 pointer-events-none"></div>
 
-          <button onClick={onOpenChat} className="group/btn relative w-full lg:w-auto px-8 py-4 sm:py-5 bg-slate-900 text-white font-bold rounded-2xl transition-all duration-300 hover:scale-105 active:scale-95 shadow-[0_10px_20px_-10px_rgba(0,0,0,0.3)] hover:shadow-[0_20px_40px_-15px_rgba(59,130,246,0.5)] overflow-hidden flex items-center justify-center gap-3">
+          <button onClick={onOpenChat} className="group/btn relative w-full md:w-auto px-8 py-4 sm:py-5 bg-slate-900 text-white font-bold rounded-2xl transition-all duration-300 hover:scale-105 active:scale-95 shadow-[0_10px_20px_-10px_rgba(0,0,0,0.3)] hover:shadow-[0_20px_40px_-15px_rgba(59,130,246,0.5)] overflow-hidden flex items-center justify-center gap-3">
             
             <div className="absolute inset-0 bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-600 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-500"></div>
             
