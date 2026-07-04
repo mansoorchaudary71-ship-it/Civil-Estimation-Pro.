@@ -8,7 +8,7 @@ import { HashRouter } from 'react-router-dom'
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <HelmetProvider>
-      <HashRouter basename="/Civil-Estimation-Pro-">
+      <HashRouter>
         <App />
       </HashRouter>
     </HelmetProvider>

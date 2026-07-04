@@ -13,7 +13,7 @@ import DynamicToolPage from './DynamicToolPage';
 export default function AppRouterSetup() {
   return (
     <HelmetProvider>
-      <HashRouter basename="/Civil-Estimation-Pro-">
+      <HashRouter>
         {/* Your Layout component would go here (Navbar, Sidebar, etc.) */}
         <Routes>
           {/* Home Route */}
