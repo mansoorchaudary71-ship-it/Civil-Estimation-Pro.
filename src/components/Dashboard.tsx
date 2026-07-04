@@ -50,7 +50,7 @@ import SocialProofSection from "./SocialProofSection";
 import WorkspaceSection from "./WorkspaceSection";
 
 import { HowItWorksSection,
- FeatureComparisonSection, AICopilotSection,
+ FeatureComparisonSection,
 } from "./LandingSections";
 
 import { useSettings } from "../context/SettingsContext";
@@ -1143,7 +1143,6 @@ export default function Dashboard({
  <ScrollReveal><SocialProofSection /></ScrollReveal>
  <ScrollReveal yOffset={30}><HowItWorksSection /></ScrollReveal>
  <ScrollReveal yOffset={30}><FeatureComparisonSection /></ScrollReveal>
-      <ScrollReveal yOffset={30}><AICopilotSection /></ScrollReveal>
  <div className="w-full bg-white pb-0 pt-10 -mt-8 relative z-10 shadow-[0_-12px_30px_rgba(0,0,0,0.08)] overflow-visible rounded-t-[2rem]">
  {/* Premium Ambient Background */}
  <div className="absolute inset-0 z-0 pointer-events-none opacity-[0.03]" 
