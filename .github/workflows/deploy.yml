@@ -30,15 +30,18 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: '20'
           cache: 'npm'
 
       - name: Install Dependencies
-        run: npm ci
+        run: npm install
 
       - name: Build Application
         # Since Vite is used, the build output is in 'dist'
         # If your GitHub repo is named 'repo-name', you might need to set the base path in vite.config.ts to '/repo-name/'
+        env:
+          CI: false
+          NODE_OPTIONS: "--max_old_space_size=4096"
         run: npm run build
 
       - name: Setup Pages
