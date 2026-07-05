@@ -103,9 +103,9 @@ export function ToolHeader({ id, title, subtitle, icon: Icon, onNavigate }: Tool
 
           {/* Print Only QR Code */}
           {currentUrl && (
-            <div className="hidden print:flex flex-col items-center justify-center gap-1 rounded-full transition-all duration-300 active:scale-95 hover:-translate-y-0.5 hover:shadow-lg shadow-sm">
-              <QRCodeSVG value={currentUrl} size={80} level="M" />
-              <span className="text-[10px] text-slate-500 font-medium max-w-[120px] text-center leading-tight">Scan to verify session data</span>
+            <div className="hidden print:flex flex-col items-center justify-center gap-1 rounded-xl bg-white p-2 border border-slate-200">
+              <QRCodeSVG value={currentUrl} size={64} level="M" />
+              <span className="text-[9px] text-slate-500 font-medium max-w-[80px] text-center leading-tight">Scan to verify data authenticity</span>
             </div>
           )}
         </div>

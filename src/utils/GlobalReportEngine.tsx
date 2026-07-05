@@ -338,6 +338,15 @@ export const GlobalReportEngine = {
     
     if (qrCodeDataURL) {
       doc.addImage(qrCodeDataURL, "PNG", pageWidth - 36, 7, 30, 30);
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(7);
+      if (safeData.theme === "Minimalist") {
+        doc.setTextColor(100, 116, 139);
+      } else {
+        doc.setTextColor(255, 255, 255);
+      }
+      doc.text("Scan to verify", pageWidth - 21, 40, { align: "center" });
+      doc.text("authenticity", pageWidth - 21, 43, { align: "center" });
     }
 
     let currentY = 55;

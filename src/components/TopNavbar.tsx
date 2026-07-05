@@ -51,20 +51,20 @@ export default function TopNavbar({
         </div>
 
         {/* Action Buttons */}
-        <div className="flex items-center gap-3 sm:gap-4">
-          <button className="relative w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-gradient-to-b from-white to-slate-50 border border-slate-200/80 hover:border-slate-300 flex items-center justify-center text-slate-600 transition-all duration-300 active:scale-95 hover:shadow-[0_8px_20px_rgba(0,0,0,0.06)] shadow-sm group overflow-hidden"
+        <div className="flex items-center gap-2 sm:gap-3">
+          <button className="relative w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-to-b from-white to-slate-50 border border-slate-200/80 hover:border-slate-300 flex items-center justify-center text-slate-600 transition-all duration-300 active:scale-95 hover:shadow-[0_8px_20px_rgba(0,0,0,0.06)] shadow-sm group overflow-hidden"
             aria-label="Search"
           >
             <div className="absolute inset-0 bg-gradient-to-tr from-slate-100/0 via-slate-100/50 to-slate-100/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-            <Search className="w-4 h-4 sm:w-[18px] sm:h-[18px] relative z-10 group-hover:scale-110 group-hover:text-blue-600 transition-all duration-300" />
+            <Search className="w-5 h-5 relative z-10 group-hover:scale-110 group-hover:text-blue-600 transition-all duration-300" />
           </button>
           
-          <button className="relative w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-gradient-to-b from-white to-slate-50 border border-slate-200/80 hover:border-slate-300 flex items-center justify-center text-slate-600 transition-all duration-300 active:scale-95 hover:shadow-[0_8px_20px_rgba(0,0,0,0.06)] shadow-sm group overflow-hidden"
+          <button className="relative w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-to-b from-white to-slate-50 border border-slate-200/80 hover:border-slate-300 flex items-center justify-center text-slate-600 transition-all duration-300 active:scale-95 hover:shadow-[0_8px_20px_rgba(0,0,0,0.06)] shadow-sm group overflow-hidden"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             aria-label="Toggle mobile menu"
           >
             <div className="absolute inset-0 bg-gradient-to-tr from-slate-100/0 via-slate-100/50 to-slate-100/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-            <Menu className="w-4 h-4 sm:w-[18px] sm:h-[18px] relative z-10 group-hover:scale-110 group-hover:text-blue-600 transition-all duration-300" />
+            <Menu className="w-5 h-5 relative z-10 group-hover:scale-110 group-hover:text-blue-600 transition-all duration-300" />
           </button>
         </div>
       </div>
