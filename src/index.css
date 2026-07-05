@@ -250,7 +250,7 @@ html.high-contrast a {
   }
   
   /* Clean Table Formatting for BOQ */
-  table, .recharts-wrapper, .chart-container, canvas, img, figure {
+  table, tbody, tr, .recharts-wrapper, .chart-container, canvas, img, figure, .summary-card, .estimation-card, .print-avoid-break {
     page-break-inside: avoid !important;
     break-inside: avoid !important;
   }
@@ -262,8 +262,6 @@ html.high-contrast a {
   }
   
   tr {
-    page-break-inside: avoid !important;
-    break-inside: avoid !important;
     page-break-after: auto !important;
   }
   
