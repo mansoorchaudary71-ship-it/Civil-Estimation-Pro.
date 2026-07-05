@@ -1,4 +1,4 @@
-const CACHE_NAME = 'civil-estimation-pro-v1';
+const CACHE_NAME = 'civil-estimation-pro-v2';
 
 const urlsToCache = [
   '/',
@@ -33,43 +33,46 @@ self.addEventListener('activate', event => {
 });
 
 self.addEventListener('fetch', event => {
+  // For navigation requests (like HTML), use Network First strategy
+  if (event.request.mode === 'navigate') {
+    event.respondWith(
+      fetch(event.request)
+        .then(response => {
+          const responseToCache = response.clone();
+          caches.open(CACHE_NAME).then(cache => {
+            cache.put(event.request, responseToCache);
+          });
+          return response;
+        })
+        .catch(() => {
+          return caches.match(event.request).then(response => {
+            return response || caches.match('/index.html');
+          });
+        })
+    );
+    return;
+  }
+
+  // For other requests, use Stale-While-Revalidate or Cache First
   event.respondWith(
     caches.match(event.request)
-      .then(response => {
-        // Cache hit - return response
-        if (response) {
-          return response;
-        }
-
-        // Clone the request because it's a stream and can only be consumed once
-        const fetchRequest = event.request.clone();
-
-        return fetch(fetchRequest).then(
-          response => {
-            // Check if we received a valid response
-            if(!response || response.status !== 200 || response.type !== 'basic') {
-              return response;
-            }
-
-            // Clone the response because it's a stream and can only be consumed once
-            const responseToCache = response.clone();
-
-            caches.open(CACHE_NAME)
-              .then(cache => {
-                // Ignore non-GET requests and API calls
-                if (event.request.method === 'GET' && !event.request.url.includes('/api/')) {
-                  cache.put(event.request, responseToCache);
-                }
-              });
-
-            return response;
+      .then(cachedResponse => {
+        const fetchPromise = fetch(event.request).then(networkResponse => {
+          if (networkResponse && networkResponse.status === 200 && networkResponse.type === 'basic') {
+            const responseToCache = networkResponse.clone();
+            caches.open(CACHE_NAME).then(cache => {
+              if (event.request.method === 'GET' && !event.request.url.includes('/api/')) {
+                cache.put(event.request, responseToCache);
+              }
+            });
           }
-        ).catch(() => {
-          // If fetch fails (offline), and it's a navigation request, try to return index.html
-          if (event.request.mode === 'navigate') {
-            return caches.match('/index.html');
-          }
+          return networkResponse;
+        }).catch(() => {
+          // Ignore fetch errors during revalidation
         });
+
+        // Return cached response immediately if available, while network fetch happens in background
+        return cachedResponse || fetchPromise;
       })
   );
 });
