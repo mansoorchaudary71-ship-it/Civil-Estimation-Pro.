@@ -1170,11 +1170,16 @@ export default function Dashboard({
                   />
                 </div>
  <div className="flex flex-col w-full">
- {isComputing ? <ToolsSkeleton /> : groupsToDisplay.map((groupName, index) => {
+ {isComputing ? <ToolsSkeleton /> : groupsToDisplay.map((groupName) => {
  const toolsInGroup = groupedModules[groupName];
  if (!toolsInGroup || toolsInGroup.length === 0) return null;
+ const allCats = Array.from(new Set(ALL_MODULES.map(m => m.category)));
+ const stableIndex = allCats.indexOf(groupName);
+ const safeIndex = stableIndex === -1 ? 0 : stableIndex;
+ const sectionBg = safeIndex % 3 === 0 ? 'bg-[#E6DFCD]' : safeIndex % 3 === 1 ? 'bg-[#D6E3F9]' : 'bg-[#D5E5DA]';
+ const catColor = safeIndex % 3 === 0 ? '#E6DFCD' : safeIndex % 3 === 1 ? '#D6E3F9' : '#D5E5DA';
  return (
- <div key={groupName} className={"relative w-full flex flex-col py-16 md:py-24 border-t border-white/60 overflow-hidden " + (index % 3 === 0 ? 'bg-[#E6DFCD]' : index % 3 === 1 ? 'bg-[#D6E3F9]' : 'bg-[#D5E5DA]')}>
+ <div key={groupName} className={`relative w-full flex flex-col py-16 md:py-24 border-t border-white/60 overflow-hidden ${sectionBg}`}>
     {/* Subtle Technical Pattern (Texture) */}
     <div 
       className="absolute inset-0 pointer-events-none opacity-[0.03] invert-0" 
@@ -1195,7 +1200,7 @@ export default function Dashboard({
  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
  {toolsInGroup.map((mod) => (
  <div key={mod.id} id={`module-card-${mod.id}`}>
- <ToolCard mod={mod} onSelect={handleSelect} />
+ <ToolCard mod={mod} onSelect={handleSelect} categoryColor={catColor} />
  </div>
  ))}
  </div>
@@ -1285,9 +1290,13 @@ export default function Dashboard({
  {settings.favoriteTools.map(toolId => {
  const mod = ALL_MODULES.find(m => m.id === toolId);
  if (!mod) return null;
+ const allCats = Array.from(new Set(ALL_MODULES.map(m => m.category)));
+ const stableIndex = allCats.indexOf(mod.category);
+ const safeIndex = stableIndex === -1 ? 0 : stableIndex;
+ const favCatColor = safeIndex % 3 === 0 ? '#E6DFCD' : safeIndex % 3 === 1 ? '#D6E3F9' : '#D5E5DA';
  return (
  <div key={`fav-${mod.id}`} id={`module-card-${mod.id}`}>
- <ToolCard mod={mod} onSelect={handleSelect} />
+ <ToolCard mod={mod} onSelect={handleSelect} categoryColor={favCatColor} />
  </div>
  );
  })}
@@ -1332,11 +1341,16 @@ export default function Dashboard({
                   />
                 </div>
  <div className="flex flex-col w-full">
- {isComputing ? <ToolsSkeleton /> : groupsToDisplay.map((groupName, index) => {
+ {isComputing ? <ToolsSkeleton /> : groupsToDisplay.map((groupName) => {
  const toolsInGroup = groupedModules[groupName];
  if (!toolsInGroup || toolsInGroup.length === 0) return null;
+ const allCats = Array.from(new Set(ALL_MODULES.map(m => m.category)));
+ const stableIndex = allCats.indexOf(groupName);
+ const safeIndex = stableIndex === -1 ? 0 : stableIndex;
+ const sectionBg = safeIndex % 3 === 0 ? 'bg-[#E6DFCD]' : safeIndex % 3 === 1 ? 'bg-[#D6E3F9]' : 'bg-[#D5E5DA]';
+ const catColor = safeIndex % 3 === 0 ? '#E6DFCD' : safeIndex % 3 === 1 ? '#D6E3F9' : '#D5E5DA';
  return (
- <div key={groupName} className={"relative w-full flex flex-col py-16 md:py-24 border-t border-white/60 overflow-hidden " + (index % 3 === 0 ? 'bg-[#E6DFCD]' : index % 3 === 1 ? 'bg-[#D6E3F9]' : 'bg-[#D5E5DA]')}>
+ <div key={groupName} className={`relative w-full flex flex-col py-16 md:py-24 border-t border-white/60 overflow-hidden ${sectionBg}`}>
     {/* Subtle Technical Pattern (Texture) */}
     <div 
       className="absolute inset-0 pointer-events-none opacity-[0.03] invert-0" 
@@ -1357,7 +1371,7 @@ export default function Dashboard({
  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 tool-card-grid">
  {toolsInGroup.map((mod) => (
  <div key={mod.id} id={`module-card-${mod.id}`}>
- <ToolCard mod={mod} onSelect={handleSelect} />
+ <ToolCard mod={mod} onSelect={handleSelect} categoryColor={catColor} />
  </div>
  ))}
  </div>
