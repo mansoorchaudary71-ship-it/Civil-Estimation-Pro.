@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, ReactNode, useEffect, useRef } from 'react';
 
-export type Currency = 'PKR' | 'USD' | 'INR' | 'AED' | 'SAR' | 'GBP' | 'BDT' | 'LKR';
+export type Currency = 'PKR' | 'USD' | 'INR' | 'AED' | 'SAR' | 'GBP' | 'BDT' | 'LKR' | 'EUR';
 export type MeasurementSystem = 'FPS' | 'SI';
 export type Theme = 'light' | 'dark' | 'system' | 'high-contrast';
 export type FontSize = 'small' | 'medium' | 'large';
@@ -101,6 +101,7 @@ const currencySymbols: Record<Currency, string> = {
   GBP: '£',
   BDT: '৳',
   LKR: 'Rs',
+  EUR: '€',
 };
 
 export function SettingsProvider({ children }: { children: ReactNode }) {
@@ -182,6 +183,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
       case 'AED': return 1 / 75;
       case 'GBP': return 1 / 350;
       case 'BDT': return 1 / 2.3;
+      case 'EUR': return 1 / 300;
       default: return 1; // PKR
     }
   };

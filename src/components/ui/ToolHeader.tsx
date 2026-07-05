@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { ClipboardList, Info, Printer, Save, Download, Share2, BookOpen, Menu, Search } from 'lucide-react';
+import { ClipboardList, Info, Printer, Save, Download, Share2, BookOpen, Menu, Search, Check } from 'lucide-react';
 import { useSettings } from '../../context/SettingsContext';
 import { CodeReferences } from './CodeReferences';
 import { FormulaModal } from './FormulaModal';
 import { motion } from 'motion/react';
 import toast from 'react-hot-toast';
 import { QRCodeSVG } from 'qrcode.react';
+import SegmentedToggle, { ToggleTheme } from './SegmentedToggle';
 
 export type ThemeType = 'default' | 'earth' | 'steel' | 'ocean' | 'emerald' | 'sunset';
 
@@ -18,12 +19,28 @@ interface ToolHeaderProps {
   onNavigate?: (id: string) => void;
 }
 
-export function ToolHeader({ id, title, subtitle, icon: Icon, onNavigate }: ToolHeaderProps) {
+export function ToolHeader({ id, title, themeType, subtitle, icon: Icon, onNavigate }: ToolHeaderProps) {
   const { settings, updateSettings } = useSettings();
   const [isFormulaModalOpen, setIsFormulaModalOpen] = useState(false);
   const [showReferences, setShowReferences] = useState(false);
   const [currentUrl, setCurrentUrl] = useState('');
-  const isMetric = settings.measurement === 'SI';
+
+  const getToggleTheme = (theme: ThemeType = 'default'): ToggleTheme => {
+    switch (theme) {
+      case 'earth':
+      case 'sunset':
+        return 'brown';
+      case 'emerald':
+        return 'green';
+      case 'steel':
+      case 'ocean':
+      default:
+        return 'blue';
+    }
+  };
+
+  const toggleTheme = getToggleTheme(themeType);
+  const currencies = ['PKR', 'INR', 'USD', 'SAR', 'AED', 'GBP', 'EUR'] as const;
 
   useEffect(() => {
     setCurrentUrl(typeof window !== 'undefined' ? window.location.href : '');
@@ -76,28 +93,27 @@ export function ToolHeader({ id, title, subtitle, icon: Icon, onNavigate }: Tool
             </div>
           </div>
 
-          {/* Unit Toggle */}
-          <div className="relative z-10 shrink-0 print:hidden">
-            <div className="flex bg-slate-100/60 p-1.5 rounded-full border border-slate-200/60 shadow-inner w-full sm:w-auto">
-              <div className="relative flex w-full sm:w-[240px]">
-                <motion.div 
-                  className="absolute top-0 bottom-0 left-0 w-1/2 bg-blue-100/60 backdrop-blur-md rounded-full shadow-[0_2px_12px_rgba(59,130,246,0.12)] border border-blue-200/50"
-                  animate={{ x: isMetric ? '0%' : '100%' }}
-                  transition={{ type: "spring", stiffness: 350, damping: 30 }}
-                />
-                <button
-                  onClick={() => updateSettings({ measurement: 'SI' })}
-                  className={`relative z-10 flex-1 py-3 text-base font-medium rounded-full transition-colors ${isMetric ? 'text-blue-800' : 'text-slate-500 hover:text-slate-700'}`}
-                >
-                  METRIC
-                </button>
-                <button
-                  onClick={() => updateSettings({ measurement: 'FPS' })}
-                  className={`relative z-10 flex-1 py-3 text-base font-medium rounded-full transition-colors ${!isMetric ? 'text-blue-800' : 'text-slate-500 hover:text-slate-700'}`}
-                >
-                  IMPERIAL
-                </button>
-              </div>
+          {/* Unit and Currency Toggles */}
+          <div className="relative z-10 shrink-0 print:hidden flex flex-col sm:flex-row items-center gap-3">
+            {/* Unit Toggle */}
+            <SegmentedToggle
+              options={[
+                { value: 'SI', label: 'Metric' },
+                { value: 'FPS', label: 'Imperial' }
+              ]}
+              selectedValue={settings.measurement}
+              onChange={(value) => updateSettings({ measurement: value as any })}
+              colorTheme={toggleTheme}
+            />
+
+            {/* Currency Toggle */}
+            <div className="w-full sm:w-auto overflow-x-auto hide-scrollbar">
+              <SegmentedToggle
+                options={currencies.map(cur => ({ value: cur, label: cur }))}
+                selectedValue={settings.currency}
+                onChange={(value) => updateSettings({ currency: value as any })}
+                colorTheme={toggleTheme}
+              />
             </div>
           </div>
 
