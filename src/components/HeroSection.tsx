@@ -68,7 +68,7 @@ export default function HeroSection({ onStart }: { onStart: () => void }) {
             className="relative z-10 w-full md:max-w-3xl md:mx-auto scale-[0.85] sm:scale-100 origin-top mb-6 sm:mb-10 px-4 md:px-0"
           >
             {/* Tablet Frame */}
-            <div className="relative bg-gray-900 rounded-[2rem] sm:rounded-[3rem] p-3 sm:p-4 shadow-2xl shadow-gray-200/50 border border-white ring-1 ring-white/10 mx-2 sm:mx-0">
+            <div className="relative bg-gray-900 rounded-[2rem] sm:rounded-[3rem] p-3 sm:p-4 shadow-2xl shadow-gray-200/50 border border-gray-800 ring-1 ring-white/10 mx-2 sm:mx-0">
               {/* Screen Content */}
               <div className="relative rounded-[1.5rem] sm:rounded-[2.25rem] overflow-hidden bg-gray-50 aspect-[16/10] border border-gray-700/50 flex flex-col">
                 {/* Mock UI Header */}
@@ -95,7 +95,7 @@ export default function HeroSection({ onStart }: { onStart: () => void }) {
                     <div className="flex gap-4 h-32 sm:h-40 flex-wrap">
                       <div className="w-full flex-1 bg-white rounded-xl border border-gray-200 shadow-sm p-4 flex flex-col gap-2 overflow-hidden relative">
                          <div className="flex justify-between items-center mb-1">
-                            <div className="text-[10px] font-bold text-white uppercase">Material Cost</div>
+                            <div className="text-[10px] font-bold text-slate-800 uppercase">Material Cost</div>
                             <div className="h-4 w-12 bg-blue-100 rounded-full"></div>
                          </div>
                          {/* Material Cost Breakdown Bars */}
@@ -166,63 +166,59 @@ export default function HeroSection({ onStart }: { onStart: () => void }) {
             <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 w-3/4 h-12 bg-gray-900/10 blur-xl rounded-[100%]"></div>
           </motion.div>
 
-          {/* Floating Cards Container */}
-          <div className="flex flex-row justify-center items-stretch gap-4 mt-8 w-full max-w-[600px] mx-auto lg:static lg:mt-0 lg:w-auto lg:max-w-none lg:block">
-            {/* Left Floating Card: 30+ Tools */}
-            <motion.div 
-              initial={{ opacity: 0, x: -30, y: 20 }}
-              animate={{ opacity: 1, x: 0, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-              className="lg:absolute left-0 top-[45%] lg:top-[75%] z-20 lg:-ml-12 flex-1 min-w-0 w-full lg:max-w-[280px] bg-white/70 backdrop-blur-lg border border-white/20 shadow-xl shadow-gray-200/50 hover:shadow-[0_12px_40px_rgba(59,130,246,0.15)] hover:-translate-y-1 hover:scale-105 transition-all duration-300 cursor-default rounded-2xl lg:rounded-[2rem] p-3 sm:p-5 flex flex-col text-left overflow-hidden"
-            >
-              <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
-                <div className="w-8 h-8 sm:w-10 sm:h-10 shrink-0 rounded-full bg-blue-50 flex items-center justify-center text-blue-600">
-                  <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5" />
-                </div>
-                <div>
-                  <h4 className="leading-tight text-sm sm:text-lg font-medium text-slate-900 sm:text-white mb-0 sm:mb-4">30+ Professional Tools</h4>
-                  <p className="hidden sm:block text-base font-normal text-slate-600 leading-relaxed">Verified to global standards</p>
-                </div>
+          {/* Left Floating Card: 30+ Tools */}
+          <motion.div 
+            initial={{ opacity: 0, x: -30, y: 20 }}
+            animate={{ opacity: 1, x: 0, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            className="lg:absolute left-0 top-[45%] lg:top-[75%] z-20 mt-6 lg:mt-0 lg:-ml-12 w-full max-w-[300px] lg:max-w-[280px] bg-white/70 backdrop-blur-lg border border-white/20 shadow-xl shadow-gray-200/50 hover:shadow-[0_12px_40px_rgba(59,130,246,0.15)] hover:-translate-y-1 hover:scale-105 transition-all duration-300 cursor-default rounded-3xl lg:rounded-[2rem] p-4 sm:p-5 flex flex-col text-left overflow-hidden"
+          >
+            <div className="flex items-center gap-3 mb-3">
+              <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600">
+                <CheckCircle2 className="w-5 h-5" />
               </div>
-              <p className="sm:hidden text-xs font-normal text-slate-600 leading-relaxed mb-2">Verified to global standards</p>
-              <div className="flex items-center justify-between pt-2 sm:pt-3 border-t border-gray-100 mt-auto">
-                <div className="flex -space-x-2">
-                  {[...Array(4)].map((_, i) => (
-                    <div key={i} className="w-5 h-5 sm:w-7 sm:h-7 rounded-full border border-white sm:border-2 bg-gray-200 flex items-center justify-center overflow-hidden">
-                      <img src={`https://i.pravatar.cc/100?img=${i+10}`} alt="Avatar" className="w-full h-full object-cover" />
-                    </div>
-                  ))}
-                </div>
-                <span className="text-xs sm:text-base font-medium">10k+ Trust</span>
+              <div>
+                <h4 className="leading-tight text-lg font-medium text-slate-800 mb-4">30+ Professional Tools</h4>
+                <p className="text-base font-normal text-slate-600 leading-relaxed">Verified to global standards</p>
               </div>
-            </motion.div>
-
-            {/* Right Floating Card: 5-Star Review */}
-            <motion.div 
-              initial={{ opacity: 0, x: 30, y: 20 }}
-              animate={{ opacity: 1, x: 0, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.5 }}
-              className="lg:absolute right-0 top-[40%] z-20 lg:-mr-12 flex-1 min-w-0 w-full lg:max-w-[280px] bg-white/70 backdrop-blur-lg border border-white/20 shadow-xl shadow-gray-200/50 hover:shadow-[0_12px_40px_rgba(37,99,235,0.15)] hover:-translate-y-1 hover:scale-105 transition-all duration-300 cursor-default rounded-2xl lg:rounded-[2rem] p-3 sm:p-5 flex flex-col text-left overflow-hidden"
-            >
-              <div className="flex gap-1 mb-2 sm:mb-3">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="w-3 h-3 sm:w-4 sm:h-4 fill-blue-600 text-blue-600" />
+            </div>
+            <div className="flex items-center justify-between pt-3 border-t border-gray-100">
+              <div className="flex -space-x-2">
+                {[...Array(4)].map((_, i) => (
+                  <div key={i} className="w-7 h-7 rounded-full border-2 border-white bg-gray-200 flex items-center justify-center overflow-hidden">
+                    <img src={`https://i.pravatar.cc/100?img=${i+10}`} alt="Avatar" className="w-full h-full object-cover" />
+                  </div>
                 ))}
               </div>
-              <p className="mb-2 sm:mb-4 text-xs sm:text-base font-normal text-slate-600 leading-relaxed">
-                "Zero calculation errors and saves hours of manual Excel entries."
-              </p>
-              <div className="flex items-center gap-2 sm:gap-3 pt-2 sm:pt-3 border-t border-gray-100 mt-auto">
-                <div className="w-6 h-6 sm:w-8 sm:h-8 shrink-0 rounded-full bg-gray-200 overflow-hidden">
-                  <img src="https://i.pravatar.cc/100?img=33" alt="Michael R." className="w-full h-full object-cover" />
-                </div>
-                <div>
-                  <p className="text-xs sm:text-base font-normal text-slate-600 leading-tight">Michael R.</p>
-                  <p className="text-[10px] sm:text-base font-normal text-slate-500 leading-tight">Civil Engineer</p>
-                </div>
+              <span className="text-base font-medium">10k+ Trust Us</span>
+            </div>
+          </motion.div>
+
+          {/* Right Floating Card: 5-Star Review */}
+          <motion.div 
+            initial={{ opacity: 0, x: 30, y: 20 }}
+            animate={{ opacity: 1, x: 0, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.5 }}
+            className="lg:absolute right-0 top-[40%] z-20 mt-4 lg:mt-0 lg:-mr-12 w-full max-w-[300px] bg-white/70 backdrop-blur-lg border border-white/20 shadow-xl shadow-gray-200/50 hover:shadow-[0_12px_40px_rgba(37,99,235,0.15)] hover:-translate-y-1 hover:scale-105 transition-all duration-300 cursor-default rounded-3xl lg:rounded-[2rem] p-4 sm:p-5 flex flex-col text-left overflow-hidden"
+          >
+            <div className="flex gap-1 mb-3">
+              {[...Array(5)].map((_, i) => (
+                <Star key={i} className="w-4 h-4 fill-blue-600 text-blue-600" />
+              ))}
+            </div>
+            <p className="mb-4 text-base font-normal text-slate-600 leading-relaxed">
+              "Zero calculation errors and saves hours of manual Excel entries."
+            </p>
+            <div className="flex items-center gap-3 pt-3 border-t border-gray-100">
+              <div className="w-8 h-8 rounded-full bg-gray-200 overflow-hidden">
+                <img src="https://i.pravatar.cc/100?img=33" alt="Michael R." className="w-full h-full object-cover" />
               </div>
-            </motion.div>
-          </div>
+              <div>
+                <p className="text-base font-normal text-slate-600 leading-relaxed">Michael R.</p>
+                <p className="text-base font-normal text-slate-600 leading-relaxed">Civil Engineer</p>
+              </div>
+            </div>
+          </motion.div>
 
         </div>
 
@@ -233,24 +229,24 @@ export default function HeroSection({ onStart }: { onStart: () => void }) {
           transition={{ duration: 0.8, delay: 0.8 }}
           className="w-full md:max-w-4xl md:mx-auto mt-12 pt-8 border-t border-gray-200/60 px-4 md:px-0"
         >
-          <p className="mb-6 text-base font-medium text-slate-600 leading-relaxed">Trusted by global practitioners and firms</p>
+          <p className="mb-6 text-base font-normal text-slate-600 leading-relaxed">Trusted by global practitioners and firms</p>
           <div className="flex flex-wrap items-center justify-center gap-8 sm:gap-12 opacity-50 grayscale hover:grayscale-0 transition-all duration-500">
             {/* Placeholder Logos */}
             <div className="text-xl font-bold tracking-tighter text-slate-800 flex items-center gap-2">
-              <div className="w-6 h-6 rounded bg-slate-800"></div> BuildCorp
+              <div className="w-6 h-6 rounded bg-gray-800"></div> BuildCorp
             </div>
             <div className="text-xl font-black tracking-widest text-slate-800 flex items-center gap-1">
-              <div className="w-4 h-6 bg-slate-800 -skew-x-12"></div>
-              <div className="w-4 h-6 bg-slate-800 -skew-x-12"></div>
+              <div className="w-4 h-6 bg-gray-800 -skew-x-12"></div>
+              <div className="w-4 h-6 bg-gray-800 -skew-x-12"></div>
               NEXUS
             </div>
             <div className="text-xl font-bold font-serif italic text-slate-800 flex items-center gap-2">
               <div className="w-6 h-6 rounded-full border-4 border-gray-800"></div> Architechs
             </div>
             <div className="text-xl font-extrabold uppercase text-slate-800 flex items-center gap-1">
-              <div className="w-3 h-6 bg-slate-800"></div>
-              <div className="w-3 h-6 bg-slate-800"></div>
-              <div className="w-3 h-6 bg-slate-800"></div>
+              <div className="w-3 h-6 bg-gray-800"></div>
+              <div className="w-3 h-6 bg-gray-800"></div>
+              <div className="w-3 h-6 bg-gray-800"></div>
               STRUCT
             </div>
           </div>

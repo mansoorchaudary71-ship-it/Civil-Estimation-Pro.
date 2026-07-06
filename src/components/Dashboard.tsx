@@ -1143,7 +1143,7 @@ export default function Dashboard({
  <ScrollReveal><SocialProofSection /></ScrollReveal>
  <ScrollReveal yOffset={30}><HowItWorksSection /></ScrollReveal>
  <ScrollReveal yOffset={30}><FeatureComparisonSection /></ScrollReveal>
- <div className="w-full bg-white pb-0 pt-10 -mt-8 relative z-10 shadow-[0_-12px_30px_rgba(0,0,0,0.08)] overflow-visible rounded-t-[2rem]">
+ <div className="w-full bg-slate-50/50 pb-0 pt-4 -mt-8 relative z-10  border-t border-slate-200/60 shadow-[0_-8px_30px_rgba(0,0,0,0.04)] overflow-visible">
  {/* Premium Ambient Background */}
  <div className="absolute inset-0 z-0 pointer-events-none opacity-[0.03]" 
  style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'24\' height=\'24\' viewBox=\'0 0 24 24\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'%23000000\' fill-opacity=\'1\' fill-rule=\'evenodd\'%3E%3Ccircle cx=\'3\' cy=\'3\' r=\'1.5\'/%3E%3C/g%3E%3C/svg%3E")' }} 
@@ -1170,37 +1170,20 @@ export default function Dashboard({
                   />
                 </div>
  <div className="flex flex-col w-full">
- {isComputing ? <ToolsSkeleton /> : groupsToDisplay.map((groupName) => {
+ {isComputing ? <ToolsSkeleton /> : groupsToDisplay.map((groupName, index) => {
  const toolsInGroup = groupedModules[groupName];
  if (!toolsInGroup || toolsInGroup.length === 0) return null;
- const allCats = Array.from(new Set(ALL_MODULES.map(m => m.category)));
- const stableIndex = allCats.indexOf(groupName);
- const safeIndex = stableIndex === -1 ? 0 : stableIndex;
- const sectionBg = safeIndex % 3 === 0 ? 'bg-[#E6DFCD]' : safeIndex % 3 === 1 ? 'bg-[#D6E3F9]' : 'bg-[#D5E5DA]';
- const catColor = safeIndex % 3 === 0 ? '#E6DFCD' : safeIndex % 3 === 1 ? '#D6E3F9' : '#D5E5DA';
  return (
- <div key={groupName} className={`relative w-full flex flex-col py-16 md:py-24 border-t border-white/60 overflow-hidden ${sectionBg}`}>
-    {/* Subtle Technical Pattern (Texture) */}
-    <div 
-      className="absolute inset-0 pointer-events-none opacity-[0.03] invert-0" 
-      style={{ 
-        backgroundImage: 'radial-gradient(#000 1px, transparent 1px)', 
-        backgroundSize: '24px 24px' 
-      }}
-    ></div>
-    
-    {/* Ambient Radial Lighting (Depth) */}
-    <div className="absolute top-0 left-1/4 w-[800px] h-[800px] bg-white/40 rounded-full blur-[100px] pointer-events-none -translate-y-1/2"></div>
-    
-    <div className="w-full md:max-w-[1400px] md:mx-auto px-4 flex flex-col gap-5 relative z-10">
-      <h2 className="px-2 flex items-center gap-2 text-xl md:text-2xl font-bold tracking-tight mb-6 text-slate-900">
+ <div key={groupName} className={`w-full flex flex-col py-12 md:py-20 ${index % 3 === 0 ? 'bg-[#F4F1EA]' : index % 3 === 1 ? 'bg-[#F0F5FF]' : 'bg-[#EFF6F1]'}`}>
+<div className="w-full md:max-w-[1400px] md:mx-auto px-4 flex flex-col gap-5">
+<h2 className="px-2 flex items-center gap-2 text-xl font-semibold text-slate-800 tracking-tight mb-4">
  {groupName}
  <span className="text-sm font-normal px-2 py-0.5 rounded-full bg-slate-100 border border-slate-200 text-slate-500 shadow-sm">{toolsInGroup.length}</span>
  </h2>
  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
  {toolsInGroup.map((mod) => (
  <div key={mod.id} id={`module-card-${mod.id}`}>
- <ToolCard mod={mod} onSelect={handleSelect} categoryColor={catColor} />
+ <ToolCard mod={mod} onSelect={handleSelect} categoryColor={index % 3 === 0 ? '#F4F1EA' : index % 3 === 1 ? '#F0F5FF' : '#EFF6F1'} />
  </div>
  ))}
  </div>
@@ -1222,7 +1205,7 @@ export default function Dashboard({
  <div className="w-full md:max-w-[1400px] md:mx-auto z-10 flex flex-col items-start gap-1 px-4 md:px-0">
  <h1 className="leading-tight text-3xl md:text-4xl lg:text-5xl font-bold text-slate-800 tracking-tight">Civil Estimation</h1>
  <h1 className="leading-tight text-3xl md:text-4xl lg:text-5xl font-bold text-blue-600 tracking-tight mb-2">Pro.</h1>
- <p className="md: max-w-lg mb-2 text-base font-normal text-slate-600 leading-relaxed">Welcome back, {user?.displayName?.split(' ')[0] || 'Engineer'}.</p>
+ <p className="md: max-w-lg mb-2 text-base font-normal text-slate-600 leading-relaxed">Welcome back, {user.displayName?.split(' ')[0] || 'Engineer'}.</p>
  </div>
  </div>
 
@@ -1287,16 +1270,12 @@ export default function Dashboard({
  Personalized Shortcuts
  </h2>
  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
- {settings.favoriteTools.map(toolId => {
+ {settings.favoriteTools.map((toolId, index) => {
  const mod = ALL_MODULES.find(m => m.id === toolId);
  if (!mod) return null;
- const allCats = Array.from(new Set(ALL_MODULES.map(m => m.category)));
- const stableIndex = allCats.indexOf(mod.category);
- const safeIndex = stableIndex === -1 ? 0 : stableIndex;
- const favCatColor = safeIndex % 3 === 0 ? '#E6DFCD' : safeIndex % 3 === 1 ? '#D6E3F9' : '#D5E5DA';
  return (
  <div key={`fav-${mod.id}`} id={`module-card-${mod.id}`}>
- <ToolCard mod={mod} onSelect={handleSelect} categoryColor={favCatColor} />
+ <ToolCard mod={mod} onSelect={handleSelect} categoryColor={'#f8fafc'} />
  </div>
  );
  })}
@@ -1341,37 +1320,20 @@ export default function Dashboard({
                   />
                 </div>
  <div className="flex flex-col w-full">
- {isComputing ? <ToolsSkeleton /> : groupsToDisplay.map((groupName) => {
+ {isComputing ? <ToolsSkeleton /> : groupsToDisplay.map((groupName, index) => {
  const toolsInGroup = groupedModules[groupName];
  if (!toolsInGroup || toolsInGroup.length === 0) return null;
- const allCats = Array.from(new Set(ALL_MODULES.map(m => m.category)));
- const stableIndex = allCats.indexOf(groupName);
- const safeIndex = stableIndex === -1 ? 0 : stableIndex;
- const sectionBg = safeIndex % 3 === 0 ? 'bg-[#E6DFCD]' : safeIndex % 3 === 1 ? 'bg-[#D6E3F9]' : 'bg-[#D5E5DA]';
- const catColor = safeIndex % 3 === 0 ? '#E6DFCD' : safeIndex % 3 === 1 ? '#D6E3F9' : '#D5E5DA';
  return (
- <div key={groupName} className={`relative w-full flex flex-col py-16 md:py-24 border-t border-white/60 overflow-hidden ${sectionBg}`}>
-    {/* Subtle Technical Pattern (Texture) */}
-    <div 
-      className="absolute inset-0 pointer-events-none opacity-[0.03] invert-0" 
-      style={{ 
-        backgroundImage: 'radial-gradient(#000 1px, transparent 1px)', 
-        backgroundSize: '24px 24px' 
-      }}
-    ></div>
-    
-    {/* Ambient Radial Lighting (Depth) */}
-    <div className="absolute top-0 left-1/4 w-[800px] h-[800px] bg-white/40 rounded-full blur-[100px] pointer-events-none -translate-y-1/2"></div>
-    
-    <div className="w-full md:max-w-[1400px] md:mx-auto px-4 flex flex-col gap-5 relative z-10">
-      <h2 className="px-2 flex items-center gap-2 text-xl md:text-2xl font-bold tracking-tight mb-6 text-slate-900">
+ <div key={groupName} className={`w-full flex flex-col py-12 md:py-20 ${index % 3 === 0 ? 'bg-[#F4F1EA]' : index % 3 === 1 ? 'bg-[#F0F5FF]' : 'bg-[#EFF6F1]'}`}>
+<div className="w-full md:max-w-[1400px] md:mx-auto px-4 flex flex-col gap-5">
+<h2 className="px-2 flex items-center gap-2 text-xl font-semibold text-slate-800 tracking-tight mb-4">
  {groupName}
  <span className="text-sm font-normal px-2 py-0.5 rounded-full bg-slate-100 border border-slate-200 text-slate-500 shadow-sm">{toolsInGroup.length}</span>
  </h2>
  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 tool-card-grid">
  {toolsInGroup.map((mod) => (
  <div key={mod.id} id={`module-card-${mod.id}`}>
- <ToolCard mod={mod} onSelect={handleSelect} categoryColor={catColor} />
+ <ToolCard mod={mod} onSelect={handleSelect} categoryColor={index % 3 === 0 ? '#F4F1EA' : index % 3 === 1 ? '#F0F5FF' : '#EFF6F1'} />
  </div>
  ))}
  </div>

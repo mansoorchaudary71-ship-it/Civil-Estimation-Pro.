@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Settings, ChevronDown, Ruler, DollarSign } from "lucide-react";
-import { useSettings, MeasurementSystem, Currency } from "../../context/SettingsContext";
+import { Settings, ChevronDown, Ruler, DollarSign, Moon, Sun, Monitor } from "lucide-react";
+import { useSettings, MeasurementSystem, Currency, Theme } from "../../context/SettingsContext";
 
 export function GlobalSettingsToggle({ align = "right", showCurrency = true }: { align?: "left" | "right", showCurrency?: boolean }) {
   const { settings, updateSettings } = useSettings();
@@ -34,11 +34,10 @@ export function GlobalSettingsToggle({ align = "right", showCurrency = true }: {
         </span>
         <Settings className="w-4 h-4 ml-0.5 text-slate-700" />
       </button>
-
       {isOpen && (
-        <div className={`absolute top-full mt-2 w-56 ${alignClass} bg-white/90  backdrop-blur-xl border border-slate-200/80  rounded-[24px] shadow-xl overflow-hidden animate-in fade-in slide-in-from-top-2 ring-1 ring-slate-900/5 `}>
+        <div className={`absolute top-full mt-2 w-56 ${alignClass} bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl border border-slate-200/80 dark:border-slate-700/80 rounded-[24px] shadow-xl overflow-hidden animate-in fade-in slide-in-from-top-2 ring-1 ring-slate-900/5 dark:ring-white/5`}>
           <div className="p-3">
-            <div className="mb-2 text-[11px] font-black text-slate-700  uppercase tracking-wider flex items-center gap-1.5 pl-1">
+            <div className="mb-2 text-[11px] font-black text-slate-700 dark:text-slate-300 uppercase tracking-wider flex items-center gap-1.5 pl-1">
               <Ruler className="w-3.5 h-3.5"/> Unit System
             </div>
             <div className={`grid grid-cols-2 gap-1.5 ${showCurrency ? 'mb-4' : ''}`}>
@@ -50,8 +49,8 @@ export function GlobalSettingsToggle({ align = "right", showCurrency = true }: {
                     onClick={() => { updateSettings({ measurement: val as MeasurementSystem }); setIsOpen(false); setTimeout(() => { window.location.reload(); }, 100); }}
                     className={`py-2 px-2 text-xs font-bold rounded-lg transition-colors ${
                       isActive 
-                        ? "bg-amber-100 text-amber-700   ring-1 ring-amber-600/20" 
-                        : "text-slate-600 hover:bg-slate-50  "
+                        ? "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 ring-1 ring-amber-600/20 dark:ring-amber-500/20" 
+                        : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50"
                     }`}
                   >
                     {val === "SI" ? "Metric (m)" : "Imperial (ft)"}
@@ -59,13 +58,12 @@ export function GlobalSettingsToggle({ align = "right", showCurrency = true }: {
                 );
               })}
             </div>
-
             {showCurrency && (
               <>
-                <div className="mb-2 text-[11px] font-black text-slate-700  uppercase tracking-wider flex items-center gap-1.5 pl-1">
+                <div className="mb-2 text-[11px] font-black text-slate-700 dark:text-slate-300 uppercase tracking-wider flex items-center gap-1.5 pl-1">
                   <DollarSign className="w-3.5 h-3.5"/> Currency
                 </div>
-                <div className="grid grid-cols-2 gap-1.5">
+                <div className="grid grid-cols-2 gap-1.5 mb-4">
                   {["PKR", "USD", "SAR", "INR"].map((val) => {
                     const isActive = settings.currency === val;
                     return (
@@ -74,8 +72,8 @@ export function GlobalSettingsToggle({ align = "right", showCurrency = true }: {
                         onClick={() => { updateSettings({ currency: val as Currency }); setIsOpen(false); }}
                         className={`py-2 px-2 text-xs font-bold rounded-lg transition-colors ${
                           isActive 
-                            ? "bg-amber-100 text-amber-700   ring-1 ring-amber-600/20" 
-                            : "text-slate-600 hover:bg-slate-50  "
+                            ? "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 ring-1 ring-amber-600/20 dark:ring-amber-500/20" 
+                            : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50"
                         }`}
                       >
                         {val}
@@ -85,6 +83,33 @@ export function GlobalSettingsToggle({ align = "right", showCurrency = true }: {
                 </div>
               </>
             )}
+
+            <div className="mb-2 text-[11px] font-black text-slate-700 dark:text-slate-300 uppercase tracking-wider flex items-center gap-1.5 pl-1">
+              <Moon className="w-3.5 h-3.5"/> Theme
+            </div>
+            <div className="grid grid-cols-3 gap-1.5">
+              {[
+                { val: "light", icon: <Sun className="w-4 h-4 mx-auto mb-1" />, label: "Light" },
+                { val: "dark", icon: <Moon className="w-4 h-4 mx-auto mb-1" />, label: "Dark" },
+                { val: "system", icon: <Monitor className="w-4 h-4 mx-auto mb-1" />, label: "Auto" }
+              ].map(({ val, icon, label }) => {
+                const isActive = settings.theme === val;
+                return (
+                  <button
+                    key={val}
+                    onClick={() => { updateSettings({ theme: val as Theme }); setIsOpen(false); }}
+                    className={`py-2 px-1 text-[10px] font-bold rounded-lg transition-colors flex flex-col items-center justify-center ${
+                      isActive 
+                        ? "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 ring-1 ring-amber-600/20 dark:ring-amber-500/20" 
+                        : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50"
+                    }`}
+                  >
+                    {icon}
+                    {label}
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </div>
       )}

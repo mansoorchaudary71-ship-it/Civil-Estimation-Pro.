@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Bookmark, BookmarkCheck, Box } from "lucide-react";
+import { Bookmark, BookmarkCheck, ArrowRight, Box } from "lucide-react";
 import { useSettings } from "../context/SettingsContext";
 import { motion } from "motion/react";
 import { cn } from "../lib/utils";
@@ -51,7 +51,7 @@ export default function ToolCard({
   if (!mod) return null;
 
   const cfg = getCategorySpec(mod.category);
-  const glowColor = categoryColor || cfg.glow;
+  const colorToUse = categoryColor || cfg.glow;
   const favoriteTools = settings?.favoriteTools || [];
   const saved = favoriteTools.includes(mod.id);
 
@@ -83,106 +83,61 @@ export default function ToolCard({
       }}
       className={cn(
         "relative w-full flex flex-col font-sans overflow-hidden cursor-pointer",
-        "rounded-[24px]",
-        "border border-gray-100 dark:border-slate-800",
+        "rounded-[24px] rounded-tl-[48px]",
+        "border border-gray-100",
         "transition-all duration-300",
-        hov ? "shadow-xl -translate-y-1 scale-[1.02]" : "shadow-sm"
+        hov ? "shadow-[0_24px_50px_-12px_rgba(0,0,0,0.35)] -translate-y-1" : "shadow-[0_8px_24px_-4px_rgba(0,0,0,0.15)]"
       )}
+      style={{ 
+        background: `radial-gradient(circle at 0% 0%, ${colorToUse} 0%, rgba(255,255,255,0) 45%), linear-gradient(135deg, #ffffff 30%, ${colorToUse} 100%)` 
+      }}
     >
-      {/* Background Layer */}
-      <div className="absolute inset-0 bg-white dark:bg-slate-900 pointer-events-none" />
-
-      {/* The Knockout Gradient */}
-      <div 
-        className={cn(
-          "absolute top-3 left-3 right-3 bottom-3 pointer-events-none dark:hidden transition-opacity duration-500 rounded-[20px]",
-          hov && "animate-pulse-slow"
-        )}
-        style={{ 
-          background: `radial-gradient(circle at 0% 0%, ${glowColor} 0%, rgba(255,255,255,0) 65%)`,
-          opacity: hov ? 1 : 0.8
-        }} 
-      />
-      <div 
-        className={cn(
-          "absolute top-3 left-3 right-3 bottom-3 pointer-events-none hidden dark:block transition-opacity duration-500 rounded-[20px]",
-          hov && "animate-pulse-slow"
-        )}
-        style={{ 
-          background: `radial-gradient(circle at 0% 0%, ${glowColor} 0%, rgba(15,23,42,0) 65%)`,
-          opacity: hov ? 1 : 0.8
-        }} 
-      />
-
-      {/* Dynamic Pulsing Glow / Shimmer on Hover */}
-      <motion.div
-        className="absolute top-3 left-3 right-3 bottom-3 pointer-events-none mix-blend-overlay rounded-[20px]"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: hov ? [0.1, 0.5, 0.1] : 0 }}
-        transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-        style={{
-          background: `linear-gradient(135deg, transparent 0%, ${glowColor} 50%, transparent 100%)`,
-        }}
-      />
-
-      <div className="relative z-10 flex flex-col h-full p-6">
-        {/* Top Row */}
+      <div className="relative z-10 flex flex-col h-full p-6 sm:p-8">
         <div className="flex items-start justify-between">
-          <div 
-            className="w-10 h-10 flex items-start justify-start pt-1 pl-1 transition-colors duration-300"
-          >
+          <div className="bg-gray-50/50 p-2 rounded-lg">
             <motion.div
                animate={{ scale: hov ? 1.1 : 1, rotate: hov ? [0, -5, 5, 0] : 0 }}
                transition={{ duration: 0.4, ease: "easeOut" }}
             >
-              <IconComponent size={32} className={hov ? "text-slate-900 dark:text-slate-100" : "text-slate-700 dark:text-slate-300"} strokeWidth={1.5} />
+              <IconComponent size={24} className="text-slate-800" strokeWidth={1.5} />
             </motion.div>
           </div>
-          
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
             {mod.isNew && (
-              <span 
-                className="text-[10px] font-bold tracking-widest px-2.5 py-1 rounded-full shrink-0 uppercase"
-                style={{
-                  color: cfg.c, 
-                  backgroundColor: `${cfg.c}15`,
-                }}
-              >
+              <span className="text-[10px] font-bold tracking-wider px-2.5 py-1 rounded-full bg-blue-50 text-blue-600 shrink-0">
                 NEW
               </span>
             )}
             <button onClick={toggleFavorite}
-              className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors active:scale-95"
+              className="flex items-center justify-center rounded-full hover:bg-gray-50 transition-colors active:scale-95"
               aria-label={saved ? "Remove from favorites" : "Add to favorites"}
             >
-              <motion.div whileHover={{ scale: 1.15 }} whileTap={{ scale: 0.9 }}>
-                {saved ? <BookmarkCheck size={18} color={cfg.c} /> : <Bookmark size={18} className="text-slate-400 dark:text-slate-500" strokeWidth={2} />}
+              <motion.div whileHover={{ scale: 1.15 }} whileTap={{ scale: 0.9 }} className="p-1">
+                {saved ? <BookmarkCheck size={20} color={cfg.c} /> : <Bookmark size={20} className="text-gray-400" strokeWidth={1.5} />}
               </motion.div>
             </button>
           </div>
         </div>
 
-        {/* Middle */}
-        <div className="mt-6 flex flex-col">
-          <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100 leading-snug tracking-tight">
+        <div className="flex flex-col mt-6">
+          <h3 className="text-xl font-bold text-slate-900 leading-tight">
             {mod.title}
           </h3>
-          <p className="text-gray-500 dark:text-slate-400 text-sm mt-2 leading-relaxed line-clamp-2">
+          <p className="text-gray-500 text-sm mt-3 leading-relaxed line-clamp-2">
             {mod.desc || "No description available."}
           </p>
         </div>
 
-        {/* Bottom Row */}
-        <div className="mt-auto pt-6 flex items-center justify-between">
-          <div className="flex flex-col gap-1">
+        <div className="mt-auto pt-6 flex items-end justify-between">
+          <div className="flex flex-col items-start gap-1">
             <Dots level={level} color={cfg.c} />
-            <span className="text-[10px] tracking-widest font-semibold text-gray-400 uppercase">
+            <span className="text-[10px] tracking-widest font-semibold text-gray-400 mt-1 uppercase">
               {LEVEL_MAP[level] || "Moderate"}
             </span>
           </div>
           <button 
-            className="rounded-full px-5 py-1.5 text-sm font-semibold tracking-wider text-slate-800 uppercase transition-transform active:scale-95"
-            style={{ backgroundColor: glowColor }}
+            className="text-slate-800 rounded-full px-7 py-3 text-sm font-bold tracking-wide uppercase transition-all duration-300 hover:opacity-90 active:scale-95"
+            style={{ backgroundColor: colorToUse === '#F4F1EA' ? '#EBE4D5' : colorToUse === '#F0F5FF' ? '#DFE9FC' : colorToUse === '#EFF6F1' ? '#E1EFE4' : colorToUse === '#f8fafc' ? '#f1f5f9' : colorToUse }}
           >
             OPEN
           </button>

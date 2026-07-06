@@ -454,7 +454,7 @@ export default function App() {
           <MarketRatesProvider>
             <TakeoffProvider>
               <ProjectProvider>
-                <div className="flex flex-col h-[100dvh] w-full bg-gradient-to-br from-slate-50 via-[#f8fafc] to-blue-50/50 font-sans text-slate-900 transition-colors duration-500">
+                <div className="flex flex-col h-[100dvh] w-full bg-gradient-to-br from-slate-50 via-[#f8fafc] to-blue-50/50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 font-sans text-slate-900 dark:text-slate-100 transition-colors duration-500">
                   <Toaster position="bottom-right" />
                   <ProductTour />
                   
@@ -476,7 +476,7 @@ export default function App() {
 
                     <main id="main-content" className="flex-1 flex flex-col bg-transparent relative w-full min-h-0 transition-all duration-300">
                       <div className="w-full h-full flex-1 flex flex-col min-h-0 relative transition-all duration-300">
-                        <div className="flex-1 flex flex-col min-h-0 relative w-full transition-colors duration-300 md:bg-white/50 md:backdrop-blur-sm">
+                        <div className="flex-1 flex flex-col min-h-0 relative w-full transition-colors duration-300 md:bg-white/50 dark:md:bg-slate-900/50 md:backdrop-blur-sm">
                           {["home", "my-estimates", "about", "careers", "contact", "blog", "privacy", "terms", "cookies"].includes(activeModule) ? (
                             <div ref={scrollRef} className="flex-1 flex flex-col min-h-0 relative w-full overflow-x-hidden overflow-y-auto">
                               <div className="flex flex-col relative w-full">

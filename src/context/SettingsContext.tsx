@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, ReactNode, useEffect, useRef } from 'react';
 
-export type Currency = 'PKR' | 'USD' | 'INR' | 'AED' | 'SAR' | 'GBP' | 'BDT' | 'LKR' | 'EUR';
+export type Currency = 'PKR' | 'USD' | 'INR' | 'AED' | 'SAR' | 'GBP' | 'BDT' | 'LKR';
 export type MeasurementSystem = 'FPS' | 'SI';
 export type Theme = 'light' | 'dark' | 'system' | 'high-contrast';
 export type FontSize = 'small' | 'medium' | 'large';
@@ -53,6 +53,7 @@ interface SettingsContextType {
   convertAmount: (amount: number) => number;
   convertAmountToRaw: (amount: number) => number;
   trackToolUse: (toolId: string) => void;
+  toggleTheme: () => void;
 }
 
 const defaultSettings: SettingsState = {
@@ -101,7 +102,6 @@ const currencySymbols: Record<Currency, string> = {
   GBP: '£',
   BDT: '৳',
   LKR: 'Rs',
-  EUR: '€',
 };
 
 export function SettingsProvider({ children }: { children: ReactNode }) {
@@ -183,7 +183,6 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
       case 'AED': return 1 / 75;
       case 'GBP': return 1 / 350;
       case 'BDT': return 1 / 2.3;
-      case 'EUR': return 1 / 300;
       default: return 1; // PKR
     }
   };
@@ -218,8 +217,15 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     });
   };
 
+  const toggleTheme = () => {
+    setSettings(prev => ({
+      ...prev,
+      theme: prev.theme === 'dark' ? 'light' : 'dark'
+    }));
+  };
+
   return (
-    <SettingsContext.Provider value={{ settings, updateSettings, formatCurrency, convertAmount, convertAmountToRaw, trackToolUse }}>
+    <SettingsContext.Provider value={{ settings, updateSettings, formatCurrency, convertAmount, convertAmountToRaw, trackToolUse, toggleTheme }}>
       {children}
     </SettingsContext.Provider>
   );
@@ -241,8 +247,10 @@ export function useGlobalSettings() {
   return {
     currentUnit: context.settings.measurement === 'SI' ? 'Metric' : 'Imperial',
     currentCurrency: context.settings.currency,
+    currentTheme: context.settings.theme,
     setCurrentUnit: (unit: 'Metric' | 'Imperial') => context.updateSettings({ measurement: unit === 'Metric' ? 'SI' : 'FPS' }),
     setCurrentCurrency: (currency: Currency) => context.updateSettings({ currency }),
+    toggleTheme: context.toggleTheme,
     ...context
   };
 }

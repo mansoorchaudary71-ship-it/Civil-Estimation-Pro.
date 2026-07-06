@@ -45,9 +45,9 @@ export default function SocialProofSection() {
   const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.1 });
 
   return (
-    <div className="w-full py-16 md:py-24 relative overflow-hidden bg-white border-b border-slate-200/50">
+    <div className="w-full py-16 md:py-20 relative overflow-hidden bg-transparent mb-8">
       {/* Subtle purple radial glow at center */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-slate-100/50 rounded-full blur-[100px] pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-blue-100/50 rounded-full blur-[100px] pointer-events-none" />
       
       <div className="w-full md:max-w-7xl md:mx-auto px-4 sm:px-6 relative z-10">
         <div className="text-center mb-16">
