@@ -20,7 +20,7 @@ export const SEO: React.FC<SEOProps> = ({ title, description, keywords, canonica
     "applicationCategory": "BusinessApplication",
     "operatingSystem": "All"
   };
-
+  
   const finalSchema = schema || defaultSchema;
 
   return (

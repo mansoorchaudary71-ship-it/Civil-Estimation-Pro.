@@ -217,7 +217,7 @@ export default function AreaSpaceCalculator() {
       </div>
 
       {/* TABS */}
-      <div className="-mx-4 px-4 pb-4 md:mx-0 md:px-0">
+      <div className="-mx-2 sm:-mx-4 px-2 sm:px-4 pb-4 md:mx-0 md:px-0">
         <UniversalTabs
           tabs={[
             { id: "shape", label: "2D Shapes", icon: <Square className="w-5 h-5" /> },

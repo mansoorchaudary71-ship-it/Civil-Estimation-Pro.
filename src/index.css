@@ -5,6 +5,9 @@
 @tailwind utilities;
 
 @layer base {
+  html, body {
+    overflow-x: hidden;
+  }
   body {
     @apply antialiased;
   }
@@ -355,5 +358,18 @@ html.high-contrast a {
   [type="range"],
   .slider {
     min-height: 48px !important;
+  }
+}
+
+@layer utilities {
+  @media screen {
+    .print-only {
+      display: none !important;
+    }
+  }
+  @media print {
+    .print-only {
+      display: block !important;
+    }
   }
 }

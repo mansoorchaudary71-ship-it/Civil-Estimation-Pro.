@@ -181,8 +181,11 @@ export default function Takeoff() {
   const [mode, setMode] = useState<Mode>("select");
   const [drawingPoints, setDrawingPoints] = useState<Point[]>([]);
   const [mousePos, setMousePos] = useState<Point | null>(null);
+  const [snapPoint, setSnapPoint] = useState<Point | null>(null);
   const [stageScale, setStageScale] = useState(1);
   const [stagePos, setStagePos] = useState({ x: 0, y: 0 });
+  const [isSpacePressed, setIsSpacePressed] = useState(false);
+  const [isMiddleMousePanning, setIsMiddleMousePanning] = useState(false);
   /* Scale related */ const [scalePrompt, setScalePrompt] = useState<{
     visible: boolean;
     pxLen: number;
@@ -200,6 +203,25 @@ export default function Takeoff() {
   >(null);
   const [editingMeasurementName, setEditingMeasurementName] = useState("");
   const [showTutorial, setShowTutorial] = useState(false);
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.code === "Space" && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
+        e.preventDefault();
+        setIsSpacePressed(true);
+      }
+    };
+    const handleKeyUp = (e: KeyboardEvent) => {
+      if (e.code === "Space") {
+        setIsSpacePressed(false);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("keyup", handleKeyUp);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("keyup", handleKeyUp);
+    };
+  }, []);
   useEffect(() => {
     if (!localStorage.getItem("takeoff_tutorial_seen")) {
       setShowTutorial(true);
@@ -308,16 +330,65 @@ export default function Takeoff() {
     return transform.point(pointerPos);
   };
   const handleMouseDown = (e: any) => {
-    if (mode === "select" || mode === "pan") return;
-    /* Middle click pan override */ if (e.evt.button === 1) return;
-    const pos = getLogicalPos(e);
-    if (!pos) return;
+    if (e.evt.button === 1) {
+      setIsMiddleMousePanning(true);
+      return;
+    }
+    if (mode === "select" || mode === "pan" || isSpacePressed) return;
+    const rawPos = getLogicalPos(e);
+    if (!rawPos) return;
+
+    let closest: Point | null = null;
+    let minDistance = 15 / stageScale;
+    const allPoints = [...drawingPoints];
+    measurements.forEach(m => {
+      allPoints.push(...m.points);
+    });
+    for (const p of allPoints) {
+      const d = getDistance(rawPos, p);
+      if (d < minDistance) {
+        minDistance = d;
+        closest = p;
+      }
+    }
+    const pos = closest || rawPos;
+
     setDrawingPoints((prev) => [...prev, pos]);
   };
   const handleMouseMove = (e: any) => {
-    if (mode === "select" || mode === "pan") return;
-    const pos = getLogicalPos(e);
-    setMousePos(pos);
+    if (mode === "select" || mode === "pan") {
+      setSnapPoint(null);
+      return;
+    }
+    const rawPos = getLogicalPos(e);
+    if (!rawPos) return;
+
+    let closest: Point | null = null;
+    let minDistance = 15 / stageScale;
+    const allPoints = [...drawingPoints];
+    measurements.forEach(m => {
+      allPoints.push(...m.points);
+    });
+    for (const p of allPoints) {
+      const d = getDistance(rawPos, p);
+      if (d < minDistance) {
+        minDistance = d;
+        closest = p;
+      }
+    }
+
+    if (closest) {
+      setSnapPoint(closest);
+      setMousePos(closest);
+    } else {
+      setSnapPoint(null);
+      setMousePos(rawPos);
+    }
+  };
+  const handleMouseUp = (e: any) => {
+    if (e.evt.button === 1) {
+      setIsMiddleMousePanning(false);
+    }
   };
   const handleFinishDrawing = useCallback(() => {
     if (drawingPoints.length < 2) {
@@ -667,13 +738,19 @@ export default function Takeoff() {
                 onWheel={handleWheel}
                 onMouseDown={handleMouseDown}
                 onMouseMove={handleMouseMove}
-                draggable={mode === "pan"}
+                onMouseUp={handleMouseUp}
+                onDragEnd={(e) => {
+                  if (e.target === e.target.getStage()) {
+                    setStagePos({ x: e.target.x(), y: e.target.y() });
+                  }
+                }}
+                draggable={mode === "pan" || isSpacePressed || isMiddleMousePanning}
                 scaleX={stageScale}
                 scaleY={stageScale}
                 x={stagePos.x}
                 y={stagePos.y}
                 className={
-                  mode === "pan"
+                  mode === "pan" || isSpacePressed || isMiddleMousePanning
                     ? "cursor-grab active:cursor-grabbing"
                     : mode !== "select"
                       ? "cursor-crosshair"
@@ -809,6 +886,18 @@ export default function Takeoff() {
                         />
                       )}
                       {/* Vertex circles */}
+                      {/* Snap Indicator */}
+                      {snapPoint && (
+                        <Circle
+                          x={snapPoint.x}
+                          y={snapPoint.y}
+                          radius={6 / stageScale}
+                          stroke="#ef4444"
+                          strokeWidth={2 / stageScale}
+                          fill="rgba(239, 68, 68, 0.2)"
+                        />
+                      )}
+                      
                       {drawingPoints.map((p, i) => (
                         <Circle
                           key={i}

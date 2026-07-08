@@ -82,29 +82,46 @@ export default function ToolCard({
         opacity: { duration: 0.3 }
       }}
       className={cn(
-        "relative w-full flex flex-col font-sans overflow-hidden cursor-pointer",
-        "rounded-[24px] rounded-tl-[48px]",
-        "border border-gray-100",
-        "transition-all duration-300",
-        hov ? "shadow-[0_24px_50px_-12px_rgba(0,0,0,0.35)] -translate-y-1" : "shadow-[0_8px_24px_-4px_rgba(0,0,0,0.15)]"
+        "w-full flex flex-col font-sans cursor-pointer transition-all duration-300",
+        "bg-white relative overflow-hidden rounded-[1.5rem] ring-1 ring-gray-900/5 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)]",
+        hov ? "shadow-[0_20px_40px_-10px_rgba(0,0,0,0.15)] -translate-y-1.5 scale-[1.02]" : ""
       )}
-      style={{ 
-        background: `radial-gradient(circle at 0% 0%, ${colorToUse} 0%, rgba(255,255,255,0) 45%), linear-gradient(135deg, #ffffff 30%, ${colorToUse} 100%)` 
+      style={{
+        backgroundImage: `radial-gradient(circle at 0% 0%, ${colorToUse === '#F4F1EA' ? '#EAE0CC' : colorToUse === '#F0F5FF' ? '#E0E7FF' : colorToUse === '#EFF6F1' ? '#DCFCE7' : colorToUse} 0%, ${colorToUse} 25%, rgba(255,255,255,0) 75%)`
       }}
     >
-      <div className="relative z-10 flex flex-col h-full p-6 sm:p-8">
-        <div className="flex items-start justify-between">
-          <div className="bg-gray-50/50 p-2 rounded-lg">
-            <motion.div
-               animate={{ scale: hov ? 1.1 : 1, rotate: hov ? [0, -5, 5, 0] : 0 }}
-               transition={{ duration: 0.4, ease: "easeOut" }}
-            >
-              <IconComponent size={24} className="text-slate-800" strokeWidth={1.5} />
-            </motion.div>
-          </div>
+      {/* Top-left fading white border highlight */}
+      <div 
+        className="absolute inset-0 pointer-events-none rounded-[1.5rem]" 
+        style={{
+          background: 'linear-gradient(135deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 1) 15%, rgba(255, 255, 255, 0) 50%)',
+          padding: '14px',
+          WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+          WebkitMaskComposite: 'xor',
+          maskComposite: 'exclude',
+        }} 
+      />
+      <div className="relative z-10 flex flex-col h-full p-8 sm:p-10">
+        <div className="flex items-start justify-between min-h-[40px]">
+          <motion.div 
+            animate={{ scale: hov ? 1.1 : 1, rotate: hov ? [0, -5, 5, 0] : 0 }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
+            className="mb-4"
+          >
+            <IconComponent size={40} className="text-slate-800" strokeWidth={2.5} />
+          </motion.div>
+          
           <div className="flex items-center gap-3">
             {mod.isNew && (
-              <span className="text-[10px] font-bold tracking-wider px-2.5 py-1 rounded-full bg-blue-50 text-blue-600 shrink-0">
+              <span 
+                className={cn(
+                  "text-[10px] font-bold tracking-wider px-3 py-1.5 rounded-xl shrink-0",
+                  colorToUse === '#F4F1EA' ? "bg-[#EBE4D5] text-[#6B6353]" :
+                  colorToUse === '#F0F5FF' ? "bg-[#E0E7FF] text-[#4F46E5]" :
+                  colorToUse === '#EFF6F1' ? "bg-[#D1FAE5] text-[#059669]" :
+                  "bg-blue-50 text-blue-600"
+                )}
+              >
                 NEW
               </span>
             )}
@@ -119,7 +136,7 @@ export default function ToolCard({
           </div>
         </div>
 
-        <div className="flex flex-col mt-6">
+        <div className="flex flex-col mt-2">
           <h3 className="text-xl font-bold text-slate-900 leading-tight">
             {mod.title}
           </h3>
@@ -136,8 +153,13 @@ export default function ToolCard({
             </span>
           </div>
           <button 
-            className="text-slate-800 rounded-full px-7 py-3 text-sm font-bold tracking-wide uppercase transition-all duration-300 hover:opacity-90 active:scale-95"
-            style={{ backgroundColor: colorToUse === '#F4F1EA' ? '#EBE4D5' : colorToUse === '#F0F5FF' ? '#DFE9FC' : colorToUse === '#EFF6F1' ? '#E1EFE4' : colorToUse === '#f8fafc' ? '#f1f5f9' : colorToUse }}
+            className={cn(
+              "text-slate-800 rounded-full px-6 py-2.5 text-xs font-bold tracking-wider uppercase transition-all duration-300 active:scale-95",
+              colorToUse === '#F4F1EA' ? "bg-[#E5DFD3] hover:bg-[#D5CDBF]" :
+              colorToUse === '#F0F5FF' ? "bg-[#D9DDF0] hover:bg-[#C4C9E6]" :
+              colorToUse === '#EFF6F1' ? "bg-[#D9E6DD] hover:bg-[#C4D6C9]" :
+              "bg-[#E2E8F4] hover:bg-[#D4DDF0]"
+            )}
           >
             OPEN
           </button>

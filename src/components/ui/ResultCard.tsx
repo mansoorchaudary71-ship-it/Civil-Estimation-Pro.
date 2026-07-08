@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence, useAnimation } from "motion/react";
 import { HelpCircle, AlertTriangle, CheckCircle, Info } from "lucide-react";
 import { useCountUp } from "../../hooks/useCountUp";
 import { useSettings } from "../../context/SettingsContext";
@@ -165,6 +165,29 @@ export function ResultCard({
   const { settings, formatCurrency } = useSettings();
   const isImperial = settings.measurement === "FPS";
 
+  const controls = useAnimation();
+  const [hasMounted, setHasMounted] = useState(false);
+
+  useEffect(() => {
+    if (!hasMounted) {
+      controls.start({
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        transition: { duration: 0.4, delay, ease: [0.23, 1, 0.32, 1] }
+      });
+      setHasMounted(true);
+    } else {
+      controls.set({ opacity: 0, y: 15, scale: 0.98 });
+      controls.start({
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        transition: { duration: 0.4, ease: [0.23, 1, 0.32, 1] }
+      });
+    }
+  }, [value, controls, delay]);
+
   // Parsing & Animation
   const parsed = parseAndFormat(value, title, unit, isImperial);
   const animatedRaw = useCountUp(parsed.num, 800);
@@ -214,10 +237,9 @@ export function ResultCard({
 
   return (
     <motion.div
+      animate={controls}
       initial={{ opacity: 0, y: 15, scale: 0.98 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.2 } }}
-      transition={{ duration: 0.4, delay, ease: [0.23, 1, 0.32, 1] }}
       className={`relative p-3 sm:p-4 md:p-5 lg:p-6 bg-white border border-slate-200 rounded-[24px] shadow-sm hover:shadow-md flex flex-col justify-between gap-2 transition-all duration-300 w-full h-full overflow-hidden ${className}`}
     >
       <div className="flex items-start justify-between gap-3 w-full relative z-10">

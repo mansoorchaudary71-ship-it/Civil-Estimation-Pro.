@@ -54,7 +54,7 @@ export function ToolHeader({ id, title, subtitle, icon: Icon, onNavigate }: Tool
   };
 
   return (
-    <div id="tool-header-top" className="relative -mx-4 md:-mx-8 px-4 md:px-8 bg-slate-50/30 pb-8 flex flex-col gap-6 pt-6">
+    <div id="tool-header-top" className="relative -mx-2 sm:-mx-4 md:-mx-8 px-2 sm:px-4 md:px-8 bg-slate-50/30 pb-8 flex flex-col gap-6 pt-6">
       <div className="md:max-w-7xl md:mx-auto w-full flex flex-col gap-6 px-4 md:px-0">
         
         {/* Title Header */}

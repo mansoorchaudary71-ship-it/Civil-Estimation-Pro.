@@ -48,6 +48,7 @@ import SearchAndFilterBar from "./SearchAndFilterBar";
 import HeroSection from "./HeroSection";
 import SocialProofSection from "./SocialProofSection";
 import WorkspaceSection from "./WorkspaceSection";
+import SummaryStatsWidget from "./SummaryStatsWidget";
 
 import { HowItWorksSection,
  FeatureComparisonSection,
@@ -1221,14 +1222,15 @@ export default function Dashboard({
  </div>
  <div className="w-full z-10 overflow-visible flex flex-col pt-4">
  <div className="mb-12 w-full md:max-w-[1400px] md:mx-auto px-4">
- <WorkspaceSection onSelect={handleSelect} />
+ <SummaryStatsWidget />
+            <WorkspaceSection onSelect={handleSelect} />
  </div>
 
  {/* Recently Used section */}
  <div className="mb-12 flex flex-col gap-5 w-full md:max-w-[1400px] md:mx-auto px-4">
  <h2 className="md: flex items-center gap-3 text-xl font-semibold text-slate-900 tracking-tight mb-4">
  <History className="w-6 h-6 text-indigo-500" />
- Continue where you left off
+ Recent Tools
  </h2>
  {recentTools.length > 0 ? (
  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-5">
@@ -1236,7 +1238,7 @@ export default function Dashboard({
  const m = ALL_MODULES.find(mod => mod.id === t.id);
  if (!m) return null;
  return (
- <div key={`recent-${t.id}`} className="relative group bg-[#F0F4F8] rounded-2xl p-4 hover:-translate-y-1 transition-all flex flex-col gap-3 shadow-[4px_4px_10px_rgba(163,177,198,0.3),-4px_-4px_10px_rgba(255,255,255,0.9)] hover:shadow-[6px_6px_15px_rgba(163,177,198,0.4),-6px_-6px_15px_rgba(255,255,255,1)]">
+ <div key={`recent-${t.id}`} className="relative group bg-[#F0F4F8] rounded-2xl p-4 hover:-translate-y-1.5 hover:scale-[1.02] transition-all flex flex-col gap-3 shadow-[4px_4px_10px_rgba(163,177,198,0.3),-4px_-4px_10px_rgba(255,255,255,0.9)] hover:shadow-[6px_6px_15px_rgba(163,177,198,0.4),-6px_-6px_15px_rgba(255,255,255,1)]">
  <div className="flex items-center gap-2">
  <div className="w-full w-9 h-9 rounded-xl flex items-center justify-center shrink-0 bg-white shadow-sm border border-slate-100 text-indigo-600 overflow-hidden">
  {m.icon && <m.icon className="w-4 h-4" strokeWidth={1.5} />}

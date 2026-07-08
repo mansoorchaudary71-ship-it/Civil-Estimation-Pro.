@@ -1,7 +1,6 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { db, auth, handleFirestoreError, OperationType } from '../lib/firebase';
-import { collection, doc, setDoc, updateDoc, deleteDoc, onSnapshot, query, where, getDocs } from 'firebase/firestore';
-import { onAuthStateChanged } from 'firebase/auth';
+import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
+import { useAuth } from '../contexts/AuthContext';
+import toast from 'react-hot-toast';
 
 export interface ProjectEstimate {
   id: string;
@@ -52,14 +51,7 @@ const ProjectContext = createContext<ProjectContextType | undefined>(undefined);
 export function ProjectProvider({ children }: { children: ReactNode }) {
   const [projects, setProjects] = useState<Project[]>([]);
   const [activeProjectId, setActiveProjectId] = useState<string | null>(null);
-  const [user, setUser] = useState<any>(null);
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
-    });
-    return () => unsubscribe();
-  }, []);
+  const { user } = useAuth();
 
   useEffect(() => {
     const active = localStorage.getItem('civil_active_project');
@@ -76,80 +68,88 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
     }
   }, [activeProjectId]);
 
-  useEffect(() => {
+  const fetchProjects = useCallback(async () => {
     if (!user) {
       setProjects([]);
       return;
     }
+    const token = localStorage.getItem('auth_token');
+    if (!token) return;
 
-    const q = query(collection(db, 'projects'), where('memberIds', 'array-contains', user.uid));
-    
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const projs: Omit<Project, 'estimates'>[] = [];
-      snapshot.forEach((docSnap) => {
-        projs.push({ id: docSnap.id, ...docSnap.data() } as Omit<Project, 'estimates'>);
+    try {
+      const res = await fetch('/api/projects', {
+        headers: { 'Authorization': `Bearer ${token}` }
       });
-
-      // Now fetch estimates for all projects
-      Promise.all(projs.map(async (p) => {
-        try {
-          const estRef = collection(db, `projects/${p.id}/estimates`);
-          const estSnap = await getDocs(estRef);
-          const estimates: ProjectEstimate[] = [];
-          estSnap.forEach((e) => estimates.push({ id: e.id, ...e.data() } as ProjectEstimate));
-          return { ...p, estimates };
-        } catch (error) {
-          console.error("Error fetching estimates for project", p.id, error);
-          return { ...p, estimates: [] };
-        }
-      })).then((fullProjects) => {
-        setProjects(fullProjects);
-      }).catch(err => {
-        handleFirestoreError(err, OperationType.GET, 'projects/estimates');
-      });
-      
-    }, (error) => {
-      handleFirestoreError(error, OperationType.GET, 'projects');
-    });
-
-    return () => unsubscribe();
+      if (res.ok) {
+        const data = await res.json();
+        setProjects(data);
+      }
+    } catch (err) {
+      console.error("Error fetching projects", err);
+    }
   }, [user]);
+
+  useEffect(() => {
+    fetchProjects();
+  }, [fetchProjects]);
+
+  const getHeaders = () => ({
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
+  });
 
   const addProject = async (data: Omit<Project, 'id' | 'estimates' | 'ownerId' | 'memberIds' | 'roles' | 'createdAt' | 'updatedAt'>) => {
     if (!user) return;
-    const newProjectId = doc(collection(db, 'projects')).id;
-    const now = Date.now();
-    const newProject = {
-      ...data,
-      ownerId: user.uid,
-      memberIds: [user.uid],
-      roles: { [user.uid]: 'owner' },
-      memberEmails: { [user.uid]: user.email || '' },
-      createdAt: now,
-      updatedAt: now
-    };
     try {
-      await setDoc(doc(db, 'projects', newProjectId), newProject);
-      if (!activeProjectId) setActiveProjectId(newProjectId);
+      const res = await fetch('/api/projects', {
+        method: 'POST',
+        headers: getHeaders(),
+        body: JSON.stringify(data)
+      });
+      if (res.ok) {
+        const newProject = await res.json();
+        setProjects(prev => [...prev, newProject]);
+        if (!activeProjectId) setActiveProjectId(newProject.id);
+      } else {
+        toast.error("Failed to add project");
+      }
     } catch (error) {
-      handleFirestoreError(error, OperationType.CREATE, 'projects');
+      toast.error("Error adding project");
     }
   };
 
   const updateProject = async (id: string, data: Partial<Omit<Project, 'id' | 'estimates' | 'ownerId' | 'createdAt'>>) => {
     try {
-      await updateDoc(doc(db, 'projects', id), { ...data, updatedAt: Date.now() });
+      const res = await fetch(`/api/projects/${id}`, {
+        method: 'PUT',
+        headers: getHeaders(),
+        body: JSON.stringify(data)
+      });
+      if (res.ok) {
+        const updated = await res.json();
+        setProjects(prev => prev.map(p => p.id === id ? updated : p));
+      } else {
+        toast.error("Failed to update project");
+      }
     } catch (error) {
-      handleFirestoreError(error, OperationType.UPDATE, `projects/${id}`);
+      toast.error("Error updating project");
     }
   };
 
   const deleteProject = async (id: string) => {
     try {
-      await deleteDoc(doc(db, 'projects', id));
-      if (activeProjectId === id) setActiveProjectId(null);
+      const res = await fetch(`/api/projects/${id}`, {
+        method: 'DELETE',
+        headers: getHeaders(),
+      });
+      if (res.ok) {
+        setProjects(prev => prev.filter(p => p.id !== id));
+        if (activeProjectId === id) setActiveProjectId(null);
+      } else {
+        toast.error("Failed to delete project");
+      }
     } catch (error) {
-      handleFirestoreError(error, OperationType.DELETE, `projects/${id}`);
+      toast.error("Error deleting project");
     }
   };
 
@@ -159,113 +159,87 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
     if (!projectToClone) return;
 
     try {
-      const newProjectId = doc(collection(db, 'projects')).id;
-      const now = Date.now();
+      const { name, ...rest } = projectToClone;
       
-      const newProject = {
+      const newProjData = {
         name: versionName,
-        location: projectToClone.location,
-        type: projectToClone.type,
-        startDate: projectToClone.startDate,
-        budget: projectToClone.budget,
-        ownerId: user.uid,
-        memberIds: [user.uid],
-        roles: { [user.uid]: 'owner' },
-        memberEmails: { [user.uid]: user.email || '' },
-        createdAt: now,
-        updatedAt: now
+        location: rest.location,
+        type: rest.type,
+        startDate: rest.startDate,
+        budget: rest.budget
       };
       
-      await setDoc(doc(db, 'projects', newProjectId), newProject);
+      const res = await fetch('/api/projects', {
+        method: 'POST',
+        headers: getHeaders(),
+        body: JSON.stringify(newProjData)
+      });
       
-      // Clone all estimates
-      for (const est of projectToClone.estimates) {
-        const newEstId = doc(collection(db, `projects/${newProjectId}/estimates`)).id;
-        const newEst = {
-          projectId: newProjectId,
-          toolId: est.toolId,
-          name: est.name,
-          cost: est.cost,
-          materials: est.materials || {},
-          date: new Date().toISOString(),
-          category: est.category,
-          createdAt: now,
-          updatedAt: now
-        };
-        await setDoc(doc(db, `projects/${newProjectId}/estimates`, newEstId), newEst);
+      if (res.ok) {
+        const newProject = await res.json();
+        
+        for (const est of projectToClone.estimates) {
+          const { id, projectId: pId, createdAt, updatedAt, date, ...estRest } = est;
+          await fetch(`/api/projects/${newProject.id}/estimates`, {
+            method: 'POST',
+            headers: getHeaders(),
+            body: JSON.stringify(estRest)
+          });
+        }
+        await fetchProjects();
       }
     } catch (error) {
-      handleFirestoreError(error, OperationType.CREATE, 'projects');
+      toast.error("Error saving version");
     }
   };
 
   const addEstimateToProject = async (projectId: string, estimate: Omit<ProjectEstimate, 'id' | 'projectId' | 'date' | 'createdAt' | 'updatedAt'>) => {
     try {
-      const newEstId = doc(collection(db, `projects/${projectId}/estimates`)).id;
-      const now = Date.now();
-      const newEst = {
-        ...estimate,
-        projectId,
-        date: new Date().toISOString(),
-        createdAt: now,
-        updatedAt: now
-      };
-      await setDoc(doc(db, `projects/${projectId}/estimates`, newEstId), newEst);
+      const res = await fetch(`/api/projects/${projectId}/estimates`, {
+        method: 'POST',
+        headers: getHeaders(),
+        body: JSON.stringify(estimate)
+      });
+      if (res.ok) {
+        const newEst = await res.json();
+        setProjects(prev => prev.map(p => {
+          if (p.id === projectId) {
+            return { ...p, estimates: [...p.estimates, newEst] };
+          }
+          return p;
+        }));
+      }
     } catch (error) {
-      handleFirestoreError(error, OperationType.CREATE, `projects/${projectId}/estimates`);
+      toast.error("Error adding estimate");
     }
   };
 
   const deleteEstimate = async (projectId: string, estimateId: string) => {
     try {
-      await deleteDoc(doc(db, `projects/${projectId}/estimates`, estimateId));
+      const res = await fetch(`/api/projects/${projectId}/estimates/${estimateId}`, {
+        method: 'DELETE',
+        headers: getHeaders(),
+      });
+      if (res.ok) {
+        setProjects(prev => prev.map(p => {
+          if (p.id === projectId) {
+            return { ...p, estimates: p.estimates.filter(e => e.id !== estimateId) };
+          }
+          return p;
+        }));
+      }
     } catch (error) {
-      handleFirestoreError(error, OperationType.DELETE, `projects/${projectId}/estimates/${estimateId}`);
+      toast.error("Error deleting estimate");
     }
   };
 
   const addMember = async (projectId: string, email: string, role: 'editor' | 'viewer') => {
-    try {
-      // Find user by email. Note: In a real app, this should be done via a cloud function for security,
-      // but we will query the users collection here.
-      const usersQuery = query(collection(db, 'users'), where('email', '==', email));
-      const usersSnap = await getDocs(usersQuery);
-      if (usersSnap.empty) {
-        throw new Error("User with that email not found");
-      }
-      const targetUserId = usersSnap.docs[0].id;
-      const targetEmail = usersSnap.docs[0].data().email;
-      const project = projects.find(p => p.id === projectId);
-      if (!project) throw new Error("Project not found");
-      
-      const newMemberIds = [...new Set([...project.memberIds, targetUserId])];
-      const newRoles = { ...project.roles, [targetUserId]: role };
-      const newEmails = { ...(project.memberEmails || {}), [targetUserId]: targetEmail };
-      
-      await updateDoc(doc(db, 'projects', projectId), { memberIds: newMemberIds, roles: newRoles, memberEmails: newEmails, updatedAt: Date.now() });
-    } catch (error) {
-      handleFirestoreError(error, OperationType.UPDATE, `projects/${projectId}`);
-      throw error;
-    }
+    // Basic implementation since we're using mock in-memory for users
+    toast.error("Not implemented with JWT mock users");
   };
 
   const removeMember = async (projectId: string, userId: string) => {
-    try {
-      const project = projects.find(p => p.id === projectId);
-      if (!project) throw new Error("Project not found");
-      if (userId === project.ownerId) throw new Error("Cannot remove owner");
-      
-      const newMemberIds = project.memberIds.filter(id => id !== userId);
-      const newRoles = { ...project.roles };
-      delete newRoles[userId];
-      const newEmails = { ...(project.memberEmails || {}) };
-      delete newEmails[userId];
-      
-      await updateDoc(doc(db, 'projects', projectId), { memberIds: newMemberIds, roles: newRoles, memberEmails: newEmails, updatedAt: Date.now() });
-    } catch (error) {
-      handleFirestoreError(error, OperationType.UPDATE, `projects/${projectId}`);
-      throw error;
-    }
+    toast.error("Not implemented with JWT mock users");
   };
 
   const canEditProject = (projectId: string) => {

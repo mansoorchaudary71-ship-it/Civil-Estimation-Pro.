@@ -26,6 +26,7 @@ import { HouseSpecsProvider } from "./context/HouseSpecsContext";
 import { MarketRatesProvider } from "./context/MarketRatesContext";
 import { TakeoffProvider } from "./context/TakeoffContext";
 import { ProjectProvider } from "./context/ProjectContext";
+import { useRecentTools } from "./hooks/useRecentTools";
 import { useAuth } from "./contexts/AuthContext";
 
 
@@ -42,7 +43,7 @@ import DiscussionWidget from "./components/DiscussionWidget";
 import { GlobalFAQ } from "./components/ui/GlobalFAQ";
 import { FeedbackWidget } from "./components/ui/FeedbackWidget";
 import ToolPageFooter from "./components/ToolPageFooter";
-
+import AuthModal from "./components/auth/AuthModal";
 
 type ModuleId = string;
 import QSWorkflow from "./components/modules/QSWorkflow";
@@ -339,6 +340,7 @@ function renderModule(activeModule: string, onNavigate: (id: string) => void) {
 
 
 export default function App() {
+  const { addRecentTool } = useRecentTools();
   const [searchTerm, setSearchTerm] = useState("");
   const [activeModule, setActiveModule] = useState<ModuleId>(() => {
     const saved = sessionStorage.getItem("activeModule");
@@ -441,6 +443,11 @@ export default function App() {
     setPreviousModule(activeModule);
     setActiveModule(id);
     setIsSidebarOpen(false);
+    
+    // Track tools that are calculators/modules (not home or pages)
+    if (id !== "home" && id !== "about" && id !== "careers" && id !== "contact" && id !== "blog" && id !== "pricing" && id !== "privacy" && id !== "terms" && id !== "cookies") {
+      addRecentTool(id);
+    }
   };
 
   return (
@@ -454,8 +461,9 @@ export default function App() {
           <MarketRatesProvider>
             <TakeoffProvider>
               <ProjectProvider>
-                <div className="flex flex-col h-[100dvh] w-full bg-gradient-to-br from-slate-50 via-[#f8fafc] to-blue-50/50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 font-sans text-slate-900 dark:text-slate-100 transition-colors duration-500">
+                <div className="flex flex-col h-[100dvh] w-full overflow-x-hidden bg-gradient-to-br from-slate-50 via-[#f8fafc] to-blue-50/50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 font-sans text-slate-900 dark:text-slate-100 transition-colors duration-500">
                   <Toaster position="bottom-right" />
+                  <AuthModal isOpen={isAuthOpen} onClose={() => setIsAuthOpen(false)} />
                   <ProductTour />
                   
                   <TopNavbar

@@ -3,7 +3,7 @@ import { Compass, BarChart3, CheckCircle2, AlertCircle } from 'lucide-react';
 
 export default function PremiumToolCard() {
   return (
-    <div className="relative w-full md:max-w-3xl md:mx-auto p-4 sm:p-4 sm:p-4 sm:p-6 md:p-4 sm:p-4 sm:p-4 sm:p-8 rounded-[32px] bg-white/70 backdrop-blur-2xl border border-white/60 shadow-[0_24px_60px_rgba(15,23,42,0.08)] overflow-hidden">
+    <div className="relative w-full md:max-w-3xl md:mx-auto p-6 md:p-8 rounded-[32px] bg-white/70 backdrop-blur-2xl border border-white/60 shadow-[0_24px_60px_rgba(15,23,42,0.08)] overflow-hidden">
       {/* Topographic Background Pattern Overlay - Simulated */}
       <div 
         className="absolute inset-0 opacity-[0.02] pointer-events-none" 
@@ -12,6 +12,18 @@ export default function PremiumToolCard() {
           backgroundSize: '30px 30px' 
         }}
       ></div>
+      
+      {/* Top-left fading white border highlight */}
+      <div 
+        className="absolute inset-0 pointer-events-none rounded-[32px]" 
+        style={{
+          background: 'linear-gradient(135deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 1) 15%, rgba(255, 255, 255, 0) 50%)',
+          padding: '14px',
+          WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+          WebkitMaskComposite: 'xor',
+          maskComposite: 'exclude',
+        }} 
+      />
       
       {/* Header */}
       <div className="relative flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
@@ -36,7 +48,7 @@ export default function PremiumToolCard() {
         {/* Left Column: Stats & Status Ring */}
         <div className="flex flex-col gap-6">
           {/* Status Ring Card */}
-          <div className="w-full p-4 sm:p-4 sm:p-4 sm:p-6 md:p-4 sm:p-4 sm:p-4 sm:p-8 rounded-[24px] bg-white/80 border border-slate-100 shadow-[0_8px_30px_rgba(15,23,42,0.04)] flex items-center gap-6 group hover:shadow-[0_12px_40px_rgba(15,23,42,0.06)] transition-all overflow-hidden">
+          <div className="w-full p-6 md:p-8 rounded-[24px] bg-white/80 border border-slate-100 shadow-[0_8px_30px_rgba(15,23,42,0.04)] flex items-center gap-6 group hover:shadow-[0_12px_40px_rgba(15,23,42,0.06)] transition-all overflow-hidden">
             <div className="relative w-24 h-24 shrink-0">
               <svg viewBox="0 0 36 36" className="w-full h-full transform -rotate-90 drop-shadow-sm">
                 <path
@@ -81,7 +93,7 @@ export default function PremiumToolCard() {
         </div>
 
         {/* Right Column: Bar Chart */}
-        <div className="w-full p-4 sm:p-4 sm:p-4 sm:p-6 md:p-4 sm:p-4 sm:p-4 sm:p-8 rounded-[24px] bg-white/80 border border-slate-100 shadow-[0_8px_30px_rgba(15,23,42,0.04)] flex flex-col drop-shadow-sm overflow-hidden">
+        <div className="w-full p-6 md:p-8 rounded-[24px] bg-white/80 border border-slate-100 shadow-[0_8px_30px_rgba(15,23,42,0.04)] flex flex-col drop-shadow-sm overflow-hidden">
           <div className="flex items-center justify-between mb-8">
             <h3 className="text-xs font-bold text-slate-900 uppercase tracking-widest">Budget Allocation</h3>
             <div className="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center border border-slate-100">

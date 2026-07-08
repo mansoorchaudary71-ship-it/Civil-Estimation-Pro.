@@ -649,18 +649,11 @@ export default function Sidebar({
             </div>
           ) : (
             <div className="flex flex-col gap-2">
-              <button onClick={handleGoogleSignIn}
-                disabled={isAuthLoading}
-                className="w-full flex items-center justify-center gap-3 py-3 rounded-full text-slate-700 bg-bg-card border border-slate-200 dark:border-slate-700 shadow-sm hover:bg-slate-50 transition-colors disabled:opacity-50 text-base font-semibold active:scale-95 hover:-translate-y-0.5"
+              <button onClick={() => { onClose?.(); onOpenAuth?.(); }}
+                className="w-full flex items-center justify-center gap-3 py-3 rounded-full text-slate-700 bg-bg-card border border-slate-200 dark:border-slate-700 shadow-sm hover:bg-slate-50 transition-colors text-base font-semibold active:scale-95 hover:-translate-y-0.5"
               >
-                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google Login Button Logo" title="Google External Sign in Auth" loading="lazy" className="w-5 h-5 bg-white rounded-full p-0.5" />
-                {isAuthLoading ? "..." : "Sign In with Google"}
+                Sign In / Register
               </button>
-              {authError && (
-                <div className="text-red-500 text-sm text-center border border-red-500/20 bg-red-500/10 rounded overflow-hidden p-2 mt-1">
-                  {authError}
-                </div>
-              )}
             </div>
           )}
         </div>

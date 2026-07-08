@@ -277,6 +277,7 @@ export default function ConstructionMaterialEstimator({ forcedTab, hideHeader }:
               activeUnit={currentUnit || "Metric"}
               onChange={(u) => setCurrentUnit(u as "Metric" | "Imperial")}
               size="sm"
+              colorTheme="blue"
             />
           </div>
           <div className="flex bg-white p-1 rounded-[24px] w-full sm:w-auto overflow-hidden">

@@ -61,7 +61,7 @@ export default function QuickEstimatorWidget() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
             transition={{ duration: 0.2 }}
-            className="absolute bottom-20 right-0 w-[calc(100vw-3rem)] sm:w-[380px] bg-white border border-slate-200 shadow-2xl rounded-2xl overflow-hidden flex flex-col"
+            className="absolute bottom-20 right-0 w-[320px] max-w-[85vw] sm:w-[380px] bg-white border border-slate-200 shadow-2xl rounded-2xl overflow-hidden flex flex-col"
           >
             <div className="bg-[#FFFFFF] border-b border-slate-200 p-4 flex items-center justify-between">
               <div className="flex items-center gap-2">
