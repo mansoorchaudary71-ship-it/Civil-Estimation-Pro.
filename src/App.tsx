@@ -1,5 +1,6 @@
 
 import { ArrowLeft } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import React, { useState, useEffect, useRef } from "react";
 import Dashboard, { ALL_MODULES as ALL_TOOLS } from "./components/Dashboard";
 import Sidebar from "./components/Sidebar";
@@ -485,27 +486,38 @@ export default function App() {
                     <main id="main-content" className="flex-1 flex flex-col bg-transparent relative w-full min-h-0 transition-all duration-300">
                       <div className="w-full h-full flex-1 flex flex-col min-h-0 relative transition-all duration-300">
                         <div className="flex-1 flex flex-col min-h-0 relative w-full transition-colors duration-300 md:bg-white/50 dark:md:bg-slate-900/50 md:backdrop-blur-sm">
-                          {["home", "my-estimates", "about", "careers", "contact", "blog", "privacy", "terms", "cookies"].includes(activeModule) ? (
-                            <div ref={scrollRef} className="flex-1 flex flex-col min-h-0 relative w-full overflow-x-hidden overflow-y-auto">
-                              <div className="flex flex-col relative w-full">
-                                {activeModule === "home" && <Dashboard previousModule={previousModule} onSelectModule={handleSelectModule} onOpenSidebar={() => setIsSidebarOpen(true)} onOpenSettings={() => setIsSettingsOpen(true)} onOpenAuth={() => setIsAuthOpen(true)} />}
-                                {activeModule === "my-estimates" && <RecentEstimates onSelectModule={handleSelectModule} />}
-                                {activeModule === "pricing" && <PricingPage />}
-                                {activeModule === "about" && <div className="p-8 pt-12"><AboutUs /></div>}
-                                {activeModule === "careers" && <div className="p-8 pt-12"><Careers /></div>}
-                                {activeModule === "contact" && <div className="p-8 pt-12"><Contact /></div>}
-                                {activeModule === "blog" && <div className="p-8 pt-12"><Blog /></div>}
-                                {activeModule === "privacy" && <LegalPages page="privacy" onNavigate={handleSelectModule} />}
-                                {activeModule === "terms" && <LegalPages page="terms" onNavigate={handleSelectModule} />}
-                                {activeModule === "cookies" && <LegalPages page="cookies" onNavigate={handleSelectModule} />}
-                                <Footer activeModule={activeModule} onNavigate={handleSelectModule} />
-                              </div>
-                            </div>
-                          ) : (
-                            <div className="flex-1 flex flex-col min-h-0 relative w-full bg-transparent overflow-x-hidden overflow-y-auto">
-                              {renderModule(activeModule, handleSelectModule)}
-                            </div>
-                          )}
+                          <AnimatePresence mode="wait">
+                            <motion.div
+                              key={activeModule}
+                              initial={{ opacity: 0, y: 15 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              exit={{ opacity: 0, y: -15 }}
+                              transition={{ duration: 0.3, ease: "easeInOut" }}
+                              className="flex-1 flex flex-col min-h-0 relative w-full h-full"
+                            >
+                              {["home", "my-estimates", "about", "careers", "contact", "blog", "privacy", "terms", "cookies"].includes(activeModule) ? (
+                                <div ref={scrollRef} className="flex-1 flex flex-col min-h-0 relative w-full overflow-x-hidden overflow-y-auto">
+                                  <div className="flex flex-col relative w-full">
+                                    {activeModule === "home" && <Dashboard previousModule={previousModule} onSelectModule={handleSelectModule} onOpenSidebar={() => setIsSidebarOpen(true)} onOpenSettings={() => setIsSettingsOpen(true)} onOpenAuth={() => setIsAuthOpen(true)} />}
+                                    {activeModule === "my-estimates" && <RecentEstimates onSelectModule={handleSelectModule} />}
+                                    {activeModule === "pricing" && <PricingPage />}
+                                    {activeModule === "about" && <div className="p-8 pt-12"><AboutUs /></div>}
+                                    {activeModule === "careers" && <div className="p-8 pt-12"><Careers /></div>}
+                                    {activeModule === "contact" && <div className="p-8 pt-12"><Contact /></div>}
+                                    {activeModule === "blog" && <div className="p-8 pt-12"><Blog /></div>}
+                                    {activeModule === "privacy" && <LegalPages page="privacy" onNavigate={handleSelectModule} />}
+                                    {activeModule === "terms" && <LegalPages page="terms" onNavigate={handleSelectModule} />}
+                                    {activeModule === "cookies" && <LegalPages page="cookies" onNavigate={handleSelectModule} />}
+                                    <Footer activeModule={activeModule} onNavigate={handleSelectModule} />
+                                  </div>
+                                </div>
+                              ) : (
+                                <div className="flex-1 flex flex-col min-h-0 relative w-full bg-transparent overflow-x-hidden overflow-y-auto">
+                                  {renderModule(activeModule, handleSelectModule)}
+                                </div>
+                              )}
+                            </motion.div>
+                          </AnimatePresence>
                         </div>
                       </div>
                     </main>

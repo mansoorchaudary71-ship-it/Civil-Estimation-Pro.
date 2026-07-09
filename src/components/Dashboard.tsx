@@ -1175,7 +1175,7 @@ export default function Dashboard({
  const toolsInGroup = groupedModules[groupName];
  if (!toolsInGroup || toolsInGroup.length === 0) return null;
  return (
- <div key={groupName} className={`w-full flex flex-col py-12 md:py-20 ${index % 3 === 0 ? 'bg-[#F4F1EA]' : index % 3 === 1 ? 'bg-[#F0F5FF]' : 'bg-[#EFF6F1]'}`}>
+ <div key={groupName} className={`w-full flex flex-col py-12 md:py-20 ${index % 3 === 0 ? 'bg-[#F4F1EA]' : index % 3 === 1 ? 'bg-[#F0F5FF]' : 'bg-[#D9E6DD]'}`}>
 <div className="w-full md:max-w-[1400px] md:mx-auto px-4 flex flex-col gap-5">
 <h2 className="px-2 flex items-center gap-2 text-xl font-semibold text-slate-800 tracking-tight mb-4">
  {groupName}
@@ -1184,7 +1184,7 @@ export default function Dashboard({
  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
  {toolsInGroup.map((mod) => (
  <div key={mod.id} id={`module-card-${mod.id}`}>
- <ToolCard mod={mod} onSelect={handleSelect} categoryColor={index % 3 === 0 ? '#F4F1EA' : index % 3 === 1 ? '#F0F5FF' : '#EFF6F1'} />
+ <ToolCard mod={mod} onSelect={handleSelect} categoryColor={index % 3 === 0 ? '#F4F1EA' : index % 3 === 1 ? '#F0F5FF' : '#D9E6DD'} />
  </div>
  ))}
  </div>
@@ -1326,7 +1326,7 @@ export default function Dashboard({
  const toolsInGroup = groupedModules[groupName];
  if (!toolsInGroup || toolsInGroup.length === 0) return null;
  return (
- <div key={groupName} className={`w-full flex flex-col py-12 md:py-20 ${index % 3 === 0 ? 'bg-[#F4F1EA]' : index % 3 === 1 ? 'bg-[#F0F5FF]' : 'bg-[#EFF6F1]'}`}>
+ <div key={groupName} className={`w-full flex flex-col py-12 md:py-20 ${index % 3 === 0 ? 'bg-[#F4F1EA]' : index % 3 === 1 ? 'bg-[#F0F5FF]' : 'bg-[#D9E6DD]'}`}>
 <div className="w-full md:max-w-[1400px] md:mx-auto px-4 flex flex-col gap-5">
 <h2 className="px-2 flex items-center gap-2 text-xl font-semibold text-slate-800 tracking-tight mb-4">
  {groupName}
@@ -1335,7 +1335,7 @@ export default function Dashboard({
  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 tool-card-grid">
  {toolsInGroup.map((mod) => (
  <div key={mod.id} id={`module-card-${mod.id}`}>
- <ToolCard mod={mod} onSelect={handleSelect} categoryColor={index % 3 === 0 ? '#F4F1EA' : index % 3 === 1 ? '#F0F5FF' : '#EFF6F1'} />
+ <ToolCard mod={mod} onSelect={handleSelect} categoryColor={index % 3 === 0 ? '#F4F1EA' : index % 3 === 1 ? '#F0F5FF' : '#D9E6DD'} />
  </div>
  ))}
  </div>

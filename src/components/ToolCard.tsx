@@ -87,7 +87,7 @@ export default function ToolCard({
         hov ? "shadow-[0_20px_40px_-10px_rgba(0,0,0,0.15)] -translate-y-1.5 scale-[1.02]" : ""
       )}
       style={{
-        backgroundImage: `radial-gradient(circle at 0% 0%, ${colorToUse === '#F4F1EA' ? '#EAE0CC' : colorToUse === '#F0F5FF' ? '#E0E7FF' : colorToUse === '#EFF6F1' ? '#DCFCE7' : colorToUse} 0%, ${colorToUse} 25%, rgba(255,255,255,0) 75%)`
+        backgroundImage: `radial-gradient(circle at 0% 0%, ${colorToUse === '#F4F1EA' ? '#EAE0CC' : colorToUse === '#F0F5FF' ? '#E0E7FF' : colorToUse === '#D9E6DD' ? '#C4D6C9' : colorToUse} 0%, ${colorToUse} 25%, rgba(255,255,255,0) 75%)`
       }}
     >
       {/* Top-left fading white border highlight */}
@@ -118,7 +118,7 @@ export default function ToolCard({
                   "text-[10px] font-bold tracking-wider px-3 py-1.5 rounded-xl shrink-0",
                   colorToUse === '#F4F1EA' ? "bg-[#EBE4D5] text-[#6B6353]" :
                   colorToUse === '#F0F5FF' ? "bg-[#E0E7FF] text-[#4F46E5]" :
-                  colorToUse === '#EFF6F1' ? "bg-[#D1FAE5] text-[#059669]" :
+                  colorToUse === '#D9E6DD' ? "bg-[#D1FAE5] text-[#059669]" :
                   "bg-blue-50 text-blue-600"
                 )}
               >
@@ -157,7 +157,7 @@ export default function ToolCard({
               "text-slate-800 rounded-full px-6 py-2.5 text-xs font-bold tracking-wider uppercase transition-all duration-300 active:scale-95",
               colorToUse === '#F4F1EA' ? "bg-[#E5DFD3] hover:bg-[#D5CDBF]" :
               colorToUse === '#F0F5FF' ? "bg-[#D9DDF0] hover:bg-[#C4C9E6]" :
-              colorToUse === '#EFF6F1' ? "bg-[#D9E6DD] hover:bg-[#C4D6C9]" :
+              colorToUse === '#D9E6DD' ? "bg-[#D9E6DD] hover:bg-[#C4D6C9]" :
               "bg-[#E2E8F4] hover:bg-[#D4DDF0]"
             )}
           >

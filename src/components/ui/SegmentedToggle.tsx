@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Check } from 'lucide-react';
-import { ALL_MODULES } from '../Dashboard';
 
 // Exact color mappings tailored to match the background hues of your tool cards
 const themeStyles = {
@@ -58,45 +57,53 @@ const SegmentedToggle = ({
   activeToolName,
   size = 'md'
 }: SegmentedToggleProps) => {
-  const [sessionToolTitle, setSessionToolTitle] = useState<string | null>(null);
+  const [resolvedThemeKey, setResolvedThemeKey] = useState<keyof typeof themeStyles>(colorTheme as keyof typeof themeStyles);
 
   useEffect(() => {
-    const activeModuleId = typeof window !== 'undefined' ? sessionStorage.getItem('activeModule') : null;
-    if (activeModuleId) {
-      const activeModule = ALL_MODULES.find(m => m.id === activeModuleId);
-      if (activeModule) {
-        setSessionToolTitle(activeModule.title);
+    let isMounted = true;
+    
+    const resolveTheme = async () => {
+      try {
+        const { ALL_MODULES } = await import('../Dashboard');
+        const activeModuleId = typeof window !== 'undefined' ? sessionStorage.getItem('activeModule') : null;
+        
+        let activeToolTitle = activeToolName;
+        if (!activeToolTitle && activeModuleId) {
+          const activeModule = ALL_MODULES.find((m: any) => m.id === activeModuleId);
+          if (activeModule) {
+            activeToolTitle = activeModule.title;
+          }
+        }
+        
+        if (!activeToolTitle) return;
+        
+        // Find the module to get its category
+        const activeModule = ALL_MODULES.find((m: any) => m.title === activeToolTitle);
+        
+        // Some alias fallback cases just in case title mismatch
+        let resolvedCategory = activeModule?.category;
+        if (!resolvedCategory) {
+          if (activeToolTitle === "Live DB Rates") resolvedCategory = "Quantity Estimation";
+          if (activeToolTitle === "Plan Measure") resolvedCategory = "Quantity Estimation";
+          if (activeToolTitle === "Cost Summary Sheet") resolvedCategory = "Quantity Estimation";
+          if (activeToolTitle === "Professional BOQ Generator") resolvedCategory = "Resources";
+          if (activeToolTitle === "Measurement Sheet Calculator") resolvedCategory = "Quantity Estimation";
+          if (activeToolTitle === "Plot Area Calculator") resolvedCategory = "Architectural";
+        }
+
+        if (resolvedCategory && categoryToTheme[resolvedCategory]) {
+          if (isMounted) setResolvedThemeKey(categoryToTheme[resolvedCategory]);
+        }
+      } catch (e) {
+        console.error("Error loading modules for SegmentedToggle theme", e);
       }
-    }
-  }, []);
-
-  const activeToolTitle = activeToolName || sessionToolTitle;
-  
-  const getResolvedTheme = (): keyof typeof themeStyles => {
-    if (!activeToolTitle) return colorTheme as keyof typeof themeStyles;
+    };
     
-    // Find the module to get its category
-    const activeModule = ALL_MODULES.find(m => m.title === activeToolTitle);
+    resolveTheme();
     
-    // Some alias fallback cases just in case title mismatch
-    let resolvedCategory = activeModule?.category;
-    if (!resolvedCategory) {
-      if (activeToolTitle === "Live DB Rates") resolvedCategory = "Quantity Estimation";
-      if (activeToolTitle === "Plan Measure") resolvedCategory = "Quantity Estimation";
-      if (activeToolTitle === "Cost Summary Sheet") resolvedCategory = "Quantity Estimation";
-      if (activeToolTitle === "Professional BOQ Generator") resolvedCategory = "Resources";
-      if (activeToolTitle === "Measurement Sheet Calculator") resolvedCategory = "Quantity Estimation";
-      if (activeToolTitle === "Plot Area Calculator") resolvedCategory = "Architectural";
-    }
+    return () => { isMounted = false; };
+  }, [activeToolName]);
 
-    if (resolvedCategory && categoryToTheme[resolvedCategory]) {
-      return categoryToTheme[resolvedCategory];
-    }
-    
-    return colorTheme as keyof typeof themeStyles;
-  };
-
-  const resolvedThemeKey = getResolvedTheme();
   const currentTheme = themeStyles[resolvedThemeKey as keyof typeof themeStyles] || themeStyles.brown;
 
   const sizeClasses = {
