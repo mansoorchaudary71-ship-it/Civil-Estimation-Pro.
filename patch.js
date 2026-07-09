@@ -1,15 +1,60 @@
 const fs = require('fs');
-const content = fs.readFileSync('src/components/ToolCard.tsx', 'utf8');
-const lines = content.split('\n');
-lines.splice(94, 15,
-  '      <div className="relative z-10 flex flex-col h-full p-6 sm:p-8">',
-  '        <div className="flex items-start justify-between">',
-  '          <motion.div ',
-  '             animate={{ scale: hov ? 1.1 : 1, rotate: hov ? [0, -5, 5, 0] : 0 }}',
-  '             transition={{ duration: 0.4, ease: "easeOut" }}',
-  '             className="text-slate-800"',
-  '          >',
-  '            <IconComponent size={32} strokeWidth={1.5} />',
-  '          </motion.div>'
-);
-fs.writeFileSync('src/components/ToolCard.tsx', lines.join('\n'));
+const file = 'src/components/modules/UnitConverter.tsx';
+let content = fs.readFileSync(file, 'utf8');
+
+const stateStr = `  const [batchResults, setBatchResults] = useState<{in: string, out: string}[]>([]);`;
+const newState = `  const [batchResults, setBatchResults] = useState<{in: string, out: string}[]>([]);
+  const [recentConversions, setRecentConversions] = useState<{
+    id: string;
+    timestamp: number;
+    fromValue: string;
+    fromUnit: string;
+    toValue: string;
+    toUnit: string;
+    category: Category;
+  }[]>([]);
+
+  useEffect(() => {
+    const saved = localStorage.getItem("unit_converter_recent");
+    if (saved) {
+      try {
+        setRecentConversions(JSON.parse(saved));
+      } catch (e) { }
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!fromValue || isNaN(parseFloat(fromValue)) || !toValue || isBatchMode || isCompareMode) return;
+    
+    const timeout = setTimeout(() => {
+      setRecentConversions(prev => {
+        if (prev.length > 0) {
+          const last = prev[0];
+          if (last.fromValue === fromValue && last.fromUnit === fromUnit && last.toUnit === toUnit) {
+            return prev;
+          }
+        }
+        
+        const newRecent = [
+          {
+            id: Date.now().toString(),
+            timestamp: Date.now(),
+            fromValue,
+            fromUnit,
+            toValue,
+            toUnit,
+            category: activeCategory
+          },
+          ...prev
+        ].slice(0, 5);
+        
+        localStorage.setItem("unit_converter_recent", JSON.stringify(newRecent));
+        return newRecent;
+      });
+    }, 1500);
+    
+    return () => clearTimeout(timeout);
+  }, [fromValue, fromUnit, toUnit, toValue, activeCategory, isBatchMode, isCompareMode]);`;
+
+content = content.replace(stateStr, newState);
+fs.writeFileSync(file, content);

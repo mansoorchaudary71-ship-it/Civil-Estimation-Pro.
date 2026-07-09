@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from "react";
 import { useGlobalSettings, MeasurementSystem } from "../../context/SettingsContext";
-import { useUnitChange } from "../../hooks/useUnitChange";
+import { useUnitChange, useConvertedState } from "../../hooks/useUnitChange";
 import {
   Square, Triangle, Circle, Layers, Ruler, Map as MapIcon, Home, Compass, RectangleHorizontal, Hexagon, Type, CornerDownRight, Calculator, PaintBucket, Plus, Trash2, ShieldCheck
 } from "lucide-react";
@@ -24,10 +24,10 @@ export default function AreaSpaceCalculator() {
 
   // --- Tab 1: Shape Calculator ---
   const [shapeType, setShapeType] = useState("rectangle");
-  const [shapeParams, setShapeParams] = useState<Record<string, number>>({
+  const [shapeParams, setShapeParams] = useConvertedState<Record<string, number>>({
     length: 5, width: 4, radius: 3, base: 4, height: 3, sideA: 5, sideB: 7, sideC: 4,
     l1: 5, l2: 3, w1: 2, w2: 2, tTop: 6, tLegWidth: 2, tTotalHeight: 5, tTopThickness: 1,
-  });
+  }, 'length');
   const [polygonCoords, setPolygonCoords] = useState<{ x: number; y: number }[]>([
     { x: 0, y: 0 }, { x: 5, y: 0 }, { x: 4, y: 4 }, { x: 1, y: 3 },
   ]);
@@ -88,7 +88,7 @@ export default function AreaSpaceCalculator() {
   const shapeData = calculateShape();
 
   // --- Tab 2: Property Area ---
-  const [propParams, setPropParams] = useState({
+  const [propParams, setPropParams] = useConvertedState({
     carpetReq: 100, internalWallsPerc: 10, externalWallsPerc: 5, balconyArea: 10, commonAreaPerc: 20,
   });
   const handlePropParam = (key: string, val: number) => setPropParams((prev) => ({ ...prev, [key]: val }));
@@ -103,7 +103,7 @@ export default function AreaSpaceCalculator() {
   }, [propParams]);
 
   // --- Tab 3: Plot Measurement ---
-  const [plotBounds, setPlotBounds] = useState({ n: 30, s: 30, e: 40, w: 40, d: 50 });
+  const [plotBounds, setPlotBounds] = useConvertedState({ n: 30, s: 30, e: 40, w: 40, d: 50 }, "length");
   const boundsArea = useMemo(() => {
     const { n, s, e, w, d } = plotBounds;
     const s1 = (n + e + d) / 2;
@@ -114,7 +114,7 @@ export default function AreaSpaceCalculator() {
   }, [plotBounds]);
 
   // --- Tab 4: Roof Area ---
-  const [roofParams, setRoofParams] = useState({ floorArea: 150, pitchAngle: 30, overhang: 0.6, perimeterLength: 50 });
+  const [roofParams, setRoofParams] = useConvertedState({ floorArea: 150, pitchAngle: 30, overhang: 0.6, perimeterLength: 50 }, { floorArea: "area", pitchAngle: "none", overhang: "length", perimeterLength: "length" });
   const roofCalc = useMemo(() => {
     const overhangArea = roofParams.perimeterLength * roofParams.overhang;
     const totalHorizontalArea = roofParams.floorArea + overhangArea;
@@ -124,11 +124,11 @@ export default function AreaSpaceCalculator() {
   }, [roofParams]);
 
   // --- Tab 5: Plaster & Paint Deductions ---
-  const [wallLen, setWallLen] = useState(5);
-  const [wallHt, setWallHt] = useState(3);
+  const [wallLen, setWallLen] = useConvertedState(5, "length");
+  const [wallHt, setWallHt] = useConvertedState(3, "length");
   const [bothFaces, setBothFaces] = useState(false);
-  const [jambDepth, setJambDepth] = useState(0.2);
-  const [openings, setOpenings] = useState([{ w: 1, h: 2, count: 1 }]);
+  const [jambDepth, setJambDepth] = useConvertedState(0.2, "length");
+  const [openings, setOpenings] = useConvertedState([{ w: 1, h: 2, count: 1 }], { w: "length", h: "length", count: "none" });
 
   const plasterCalc = useMemo(() => {
     let grossArea = wallLen * wallHt;

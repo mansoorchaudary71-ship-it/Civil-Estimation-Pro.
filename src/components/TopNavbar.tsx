@@ -4,6 +4,7 @@ import { cn } from "../lib/utils";
 import { useSettings } from "../context/SettingsContext";
 import { useAuth } from "../contexts/AuthContext";
 import { User } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export default function TopNavbar({
   onNavigate,
@@ -20,6 +21,7 @@ export default function TopNavbar({
 }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { settings, toggleTheme } = useSettings();
+  const navigate = useNavigate();
   const { user } = useAuth();
 
   useEffect(() => {
@@ -43,7 +45,7 @@ export default function TopNavbar({
         {/* Logo Section */}
         <div 
           className="flex items-center gap-3 sm:gap-4 cursor-pointer group" 
-          onClick={() => onNavigate && onNavigate("home")}
+          onClick={() => onNavigate ? onNavigate("home") : navigate("/")}
         >
           <div className="relative w-10 h-10 sm:w-12 sm:h-12 rounded-[14px] sm:rounded-2xl flex items-center justify-center font-black text-[15px] sm:text-[17px] text-white bg-gradient-to-br from-slate-800 via-slate-900 to-black border border-slate-700 shadow-[0_8px_20px_rgba(0,0,0,0.15)] transition-all duration-500 group-hover:scale-[1.05] group-hover:shadow-[0_12px_30px_rgba(0,0,0,0.25)] overflow-hidden">
             {/* Glossy reflection */}
@@ -77,7 +79,7 @@ export default function TopNavbar({
           </button>
           
           <button className="relative w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-gradient-to-b from-white to-slate-50 dark:from-slate-800 dark:to-slate-900 border border-slate-200/80 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 flex items-center justify-center text-slate-600 dark:text-slate-300 transition-all duration-300 active:scale-95 hover:shadow-[0_8px_20px_rgba(0,0,0,0.06)] dark:hover:shadow-[0_8px_20px_rgba(0,0,0,0.2)] shadow-sm group overflow-hidden"
-            onClick={() => user ? (onOpenProfile && onOpenProfile()) : (onOpenAuth && onOpenAuth())}
+            onClick={() => user ? (onOpenProfile ? onOpenProfile() : null) : (onOpenAuth ? onOpenAuth() : window.dispatchEvent(new CustomEvent("open-login-modal")))}
             aria-label="User Profile"
           >
             <div className="absolute inset-0 bg-gradient-to-tr from-slate-100/0 via-slate-100/50 dark:via-slate-700/50 to-slate-100/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />

@@ -82,6 +82,20 @@ export const routes = [
     }
   },
   {
+    path: "/team",
+    async lazy() {
+      const { default: TeamCollaboration } = await import("./components/pages/TeamCollaboration");
+      return { element: <TeamCollaboration /> };
+    }
+  },
+  {
+    path: "/join/:projectId/:shareToken",
+    async lazy() {
+      const { default: JoinProject } = await import("./components/pages/JoinProject");
+      return { element: <JoinProject /> };
+    }
+  },
+  {
     path: "/about",
     async lazy() {
       const { default: AboutUs } = await import("./components/pages/AboutUs");

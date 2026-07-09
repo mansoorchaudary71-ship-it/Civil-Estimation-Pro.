@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from "react";
+import { useConvertedState } from "../../hooks/useUnitChange";
 import { UniversalTabs } from "../ui/UniversalTabs";
 import {
   Box,
@@ -49,31 +50,31 @@ export default function VolumeEstimator() {
   
   const [activeShape, setActiveShape] = useState<Shape>("Rectangular Prism");
   const system = currentUnit;
-  /* Input states */ const [length, setLength] = useState("");
-  const [width, setWidth] = useState("");
-  const [height, setHeight] = useState("");
-  const [side, setSide] = useState("");
-  const [radius, setRadius] = useState("");
-  const [topRadius, setTopRadius] = useState("");
-  const [bottomRadius, setBottomRadius] = useState("");
-  const [base, setBase] = useState("");
-  const [topWidth, setTopWidth] = useState("");
-  const [bottomWidth, setBottomWidth] = useState("");
-  const [depth, setDepth] = useState("");
-  const [baseArea, setBaseArea] = useState("");
-  const [basePerimeter, setBasePerimeter] = useState("");
-  const [outerDiameter, setOuterDiameter] = useState("");
-  const [innerDiameter, setInnerDiameter] = useState("");
+  /* Input states */ const [length, setLength] = useConvertedState("", "length");
+  const [width, setWidth] = useConvertedState("", "length");
+  const [height, setHeight] = useConvertedState("", "length");
+  const [side, setSide] = useConvertedState("", "length");
+  const [radius, setRadius] = useConvertedState("", "length");
+  const [topRadius, setTopRadius] = useConvertedState("", "length");
+  const [bottomRadius, setBottomRadius] = useConvertedState("", "length");
+  const [base, setBase] = useConvertedState("", "length");
+  const [topWidth, setTopWidth] = useConvertedState("", "length");
+  const [bottomWidth, setBottomWidth] = useConvertedState("", "length");
+  const [depth, setDepth] = useConvertedState("", "length");
+  const [baseArea, setBaseArea] = useConvertedState("", "area");
+  const [basePerimeter, setBasePerimeter] = useConvertedState("", "length");
+  const [outerDiameter, setOuterDiameter] = useConvertedState("", "length");
+  const [innerDiameter, setInnerDiameter] = useConvertedState("", "length");
   const [density, setDensity] = useState("2400"); // default, we'll let user change it
   
   // Commercial Tank advanced states
   const [tankBaseShape, setTankBaseShape] = useState<"Rectangular" | "Cylindrical">("Rectangular");
   const [hasSlopedBase, setHasSlopedBase] = useState(false);
-  const [slopedHeight, setSlopedHeight] = useState("");
+  const [slopedHeight, setSlopedHeight] = useConvertedState("", "length");
   const [freeboardPercent, setFreeboardPercent] = useState("10");
-  const [deadStorageDepth, setDeadStorageDepth] = useState("");
-  const [outletLength, setOutletLength] = useState("");
-  const [outletWidth, setOutletWidth] = useState("");
+  const [deadStorageDepth, setDeadStorageDepth] = useConvertedState("", "length");
+  const [outletLength, setOutletLength] = useConvertedState("", "length");
+  const [outletWidth, setOutletWidth] = useConvertedState("", "length");
   const [tankSteps, setTankSteps] = useState<any[]>([]);
   
   React.useEffect(() => {

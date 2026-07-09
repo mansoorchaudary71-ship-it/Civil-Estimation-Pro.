@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useMemo, lazy, Suspense } from "react";
+import React, { useState, useEffect, useMemo } from "react";
+import AggregateChart from "./AggregateChart";
 import { RefreshCw, Calculator, Layers, AlertCircle, ArrowRightLeft, Wand2, LineChart as LineChartIcon } from "lucide-react";
 import toast from "react-hot-toast";
 
-const LazyAggregateChart = lazy(() => import("./AggregateChart"));
+
 
 // Custom hook for debouncing values (e.g. for slider interactions)
 function useDebounce<T>(value: T, delay: number): T {
@@ -415,9 +416,7 @@ export default function AggregateBlendingCalculator() {
               <LineChartIcon className="w-5 h-5 text-[var(--accent-vibrant)]" /> Blended Gradation Curve
             </h3>
             <div className="flex-1 w-full relative min-h-0">
-               <Suspense fallback={<div className="flex items-center justify-center w-full h-full text-slate-500">Loading chart...</div>}>
-                 <LazyAggregateChart data={chartData} />
-               </Suspense>
+               <AggregateChart data={chartData} />
             </div>
           </div>
 

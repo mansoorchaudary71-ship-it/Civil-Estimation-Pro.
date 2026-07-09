@@ -43,6 +43,19 @@ type MainCategory = {
 
 const SIDEBAR_DATA: MainCategory[] = [
   {
+    id: "team",
+    label: "Team & Projects",
+    icon: Users,
+    tools: [
+      {
+        id: "team-collaboration",
+        label: "Team Collaboration",
+        icon: Users,
+        subTools: []
+      }
+    ]
+  },
+  {
     id: "structural-design",
     label: "Structural Design",
     icon: Building2,

@@ -2,6 +2,9 @@
 import { ArrowLeft } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import React, { useState, useEffect, useRef } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import TeamCollaboration from "./components/pages/TeamCollaboration";
+import JoinProject from "./components/pages/JoinProject";
 import Dashboard, { ALL_MODULES as ALL_TOOLS } from "./components/Dashboard";
 import Sidebar from "./components/Sidebar";
 import TopNavbar from "./components/TopNavbar";
@@ -343,10 +346,28 @@ function renderModule(activeModule: string, onNavigate: (id: string) => void) {
 export default function App() {
   const { addRecentTool } = useRecentTools();
   const [searchTerm, setSearchTerm] = useState("");
+  const location = useLocation();
+  const navigate = useNavigate();
+
   const [activeModule, setActiveModule] = useState<ModuleId>(() => {
+    const hash = window.location.hash;
+    if (hash.startsWith("#/join/")) {
+      return "join-project";
+    }
+    if (hash.startsWith("#/team")) {
+      return "team-collaboration";
+    }
     const saved = sessionStorage.getItem("activeModule");
     return (saved as ModuleId) || "home";
   });
+
+  useEffect(() => {
+    if (location.pathname.startsWith('/join/')) {
+      setActiveModule('join-project');
+    } else if (location.pathname === '/team') {
+      setActiveModule('team-collaboration');
+    }
+  }, [location]);
 
   useEffect(() => {
     sessionStorage.setItem("activeModule", activeModule);
@@ -363,6 +384,12 @@ export default function App() {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const { user, logOut } = useAuth();
+
+  useEffect(() => {
+    const handleOpenAuth = () => setIsAuthOpen(true);
+    window.addEventListener("open-login-modal", handleOpenAuth);
+    return () => window.removeEventListener("open-login-modal", handleOpenAuth);
+  }, []);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -432,11 +459,63 @@ export default function App() {
       }
     };
 
+    const handleUnitsChanged = (e: Event) => {
+      const customEvent = e as CustomEvent;
+      const newMeasurement = customEvent.detail?.measurement;
+      if (!newMeasurement) return;
+
+      const inputs = document.querySelectorAll('input[type="number"], input[inputmode="decimal"], input[inputmode="numeric"]');
+      
+      inputs.forEach((input) => {
+        const target = input as HTMLInputElement;
+        const val = parseFloat(target.value);
+        if (isNaN(val) || val === 0) return;
+
+        const identifiers = (target.id + " " + target.name + " " + target.placeholder + " " + target.className).toLowerCase();
+        
+        if (
+          identifiers.includes('price') || 
+          identifiers.includes('cost') || 
+          identifiers.includes('rate') || 
+          identifiers.includes('percent') || 
+          identifiers.includes('ratio') || 
+          identifiers.includes('count') || 
+          identifiers.includes('quantity') ||
+          identifiers.includes('days') ||
+          identifiers.includes('hours') ||
+          identifiers.includes('year') ||
+          identifiers.includes('month') ||
+          identifiers.includes('bag')
+        ) {
+          return;
+        }
+        
+        let factor = 1;
+        
+        if (identifiers.includes('volume') || identifiers.includes('cubic')) {
+           factor = newMeasurement === 'SI' ? (1 / 35.3147) : 35.3147;
+        } else if (identifiers.includes('area') || identifiers.includes('sq') || identifiers.includes('square')) {
+           factor = newMeasurement === 'SI' ? (1 / 10.7639) : 10.7639;
+        } else if (identifiers.includes('weight') || identifiers.includes('mass') || identifiers.includes('kg') || identifiers.includes('lbs')) {
+           factor = newMeasurement === 'SI' ? (1 / 2.20462) : 2.20462;
+        } else {
+           factor = newMeasurement === 'SI' ? 0.3048 : 3.28084;
+        }
+        
+        const newVal = Number((val * factor).toFixed(3));
+        setNativeValue(target, newVal.toString());
+        target.dispatchEvent(new Event('input', { bubbles: true }));
+      });
+    };
+
     document.addEventListener('input', handleInput, true);
     document.addEventListener('focusout', handleFocusOut, true);
+    window.addEventListener('units-changed', handleUnitsChanged);
+
     return () => {
       document.removeEventListener('input', handleInput, true);
       document.removeEventListener('focusout', handleFocusOut, true);
+      window.removeEventListener('units-changed', handleUnitsChanged);
     };
   }, []);
 

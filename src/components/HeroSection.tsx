@@ -227,27 +227,51 @@ export default function HeroSection({ onStart }: { onStart: () => void }) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.8 }}
-          className="w-full md:max-w-4xl md:mx-auto mt-12 pt-8 border-t border-gray-200/60 px-4 md:px-0"
+          className="w-full mt-16 pt-16 pb-20 bg-pink-100/50 relative"
         >
-          <p className="mb-6 text-base font-normal text-slate-600 leading-relaxed">Trusted by global practitioners and firms</p>
-          <div className="flex flex-wrap items-center justify-center gap-8 sm:gap-12 opacity-50 grayscale hover:grayscale-0 transition-all duration-500">
-            {/* Placeholder Logos */}
-            <div className="text-xl font-bold tracking-tighter text-slate-800 flex items-center gap-2">
-              <div className="w-6 h-6 rounded bg-gray-800"></div> BuildCorp
+          {/* Pill-shaped Tab */}
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20">
+            <div className="bg-white rounded-full px-10 py-3.5 shadow-md ring-1 ring-black/5 flex items-center justify-center">
+              <span className="text-xs sm:text-sm font-extrabold text-slate-700 uppercase tracking-widest whitespace-nowrap">
+                Trusted by global practitioners and firms
+              </span>
             </div>
-            <div className="text-xl font-black tracking-widest text-slate-800 flex items-center gap-1">
-              <div className="w-4 h-6 bg-gray-800 -skew-x-12"></div>
-              <div className="w-4 h-6 bg-gray-800 -skew-x-12"></div>
-              NEXUS
-            </div>
-            <div className="text-xl font-bold font-serif italic text-slate-800 flex items-center gap-2">
-              <div className="w-6 h-6 rounded-full border-4 border-gray-800"></div> Architechs
-            </div>
-            <div className="text-xl font-extrabold uppercase text-slate-800 flex items-center gap-1">
-              <div className="w-3 h-6 bg-gray-800"></div>
-              <div className="w-3 h-6 bg-gray-800"></div>
-              <div className="w-3 h-6 bg-gray-800"></div>
-              STRUCT
+          </div>
+          
+          <div className="relative w-full overflow-hidden flex">
+            {/* Gradient masks for smooth fade on edges */}
+            <div className="absolute top-0 left-0 bottom-0 w-24 md:w-48 bg-gradient-to-r from-pink-100/50 to-transparent z-10 pointer-events-none"></div>
+            <div className="absolute top-0 right-0 bottom-0 w-24 md:w-48 bg-gradient-to-l from-pink-100/50 to-transparent z-10 pointer-events-none"></div>
+            
+            {/* The infinite scrolling marquee container */}
+            <div className="flex animate-marquee min-w-max hover:[animation-play-state:paused]">
+              {[1, 2].map((group) => (
+                <div key={group} className="flex items-center gap-16 md:gap-24 px-8 md:px-12">
+                  <div className="text-xl font-bold tracking-tighter text-slate-800 flex items-center gap-2 shrink-0">
+                    <div className="w-8 h-8 rounded bg-blue-600"></div> BuildCorp
+                  </div>
+                  <div className="text-xl font-black tracking-widest text-slate-800 flex items-center gap-1 shrink-0">
+                    <div className="w-5 h-8 bg-emerald-600 -skew-x-12"></div>
+                    <div className="w-5 h-8 bg-emerald-600 -skew-x-12"></div>
+                    NEXUS
+                  </div>
+                  <div className="text-xl font-bold font-serif italic text-slate-800 flex items-center gap-2 shrink-0">
+                    <div className="w-8 h-8 rounded-full border-[5px] border-purple-600"></div> Architechs
+                  </div>
+                  <div className="text-xl font-extrabold uppercase text-slate-800 flex items-center gap-1 shrink-0">
+                    <div className="w-4 h-8 bg-orange-500"></div>
+                    <div className="w-4 h-8 bg-orange-500"></div>
+                    <div className="w-4 h-8 bg-orange-500"></div>
+                    STRUCT
+                  </div>
+                  <div className="text-xl font-bold tracking-tight text-slate-800 flex items-center gap-2 shrink-0">
+                     <div className="w-8 h-8 rounded-tl-xl rounded-br-xl bg-teal-600"></div> Civis
+                  </div>
+                  <div className="text-xl font-black text-slate-800 flex items-center gap-2 shrink-0">
+                    <div className="w-6 h-6 rotate-45 bg-rose-600"></div> Apex
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </motion.div>
